@@ -25,10 +25,12 @@ api.interceptors.response.use(
   (error) => {
     const message = error.response?.data?.message || error.message || 'An unexpected API error occurred';
     window.dispatchEvent(new CustomEvent('api-error', { detail: message }));
-    if (error.response?.status === 401) {
+    const requestUrl = error.config?.url || '';
+    const isAuthSubmission = /(?:^|\/)auth\/(?:login|register)(?:[/?#]|$)/.test(requestUrl);
+    if (error.response?.status === 401 && !isAuthSubmission) {
       localStorage.removeItem('token');
       localStorage.removeItem('user');
-      window.location.href = '/login';
+      if (window.location.pathname !== '/login') window.location.href = '/login';
     }
     return Promise.reject(error);
   }
@@ -54,19 +56,28 @@ export const profileAPI = {
 
 // Teams
 export const teamAPI = {
-  create: (data) => api.post('/teams/create', data),
-  join: (data) => api.post('/teams/join', data),
-  getMyTeam: () => api.get('/teams/my-team'),
-  getAll: () => api.get('/teams'),
+  createForHackathon: (hackathonId, data) =>
+    api.post(`/hackathons/${encodeURIComponent(hackathonId)}/teams`, data),
+  joinForHackathon: (hackathonId, data) =>
+    api.post(`/hackathons/${encodeURIComponent(hackathonId)}/teams/join`, data),
+  getMyTeamForHackathon: (hackathonId) =>
+    api.get(`/hackathons/${encodeURIComponent(hackathonId)}/teams/my-team`),
+  getAllForHackathon: (hackathonId) =>
+    api.get(`/hackathons/${encodeURIComponent(hackathonId)}/teams`),
   getById: (id) => api.get(`/teams/${id}`),
 };
 
 // Projects
 export const projectAPI = {
-  submit: (data) => api.post('/projects/submit', data),
-  getAll: () => api.get('/projects'),
+  submitForHackathon: (hackathonId, data) =>
+    api.post(`/hackathons/${encodeURIComponent(hackathonId)}/projects/submit`, data),
+  updateForHackathon: (hackathonId, projectId, data) =>
+    api.put(`/hackathons/${encodeURIComponent(hackathonId)}/projects/${projectId}`, data),
+  getAllForHackathon: (hackathonId) =>
+    api.get(`/hackathons/${encodeURIComponent(hackathonId)}/projects`),
+  getMyProjectForHackathon: (hackathonId) =>
+    api.get(`/hackathons/${encodeURIComponent(hackathonId)}/projects/my-project`),
   getById: (id) => api.get(`/projects/${id}`),
-  getMyProject: () => api.get('/projects/my-project'),
   delete: (id) => api.delete(`/projects/${id}`),
 };
 
@@ -79,12 +90,33 @@ export const scoreAPI = {
 
 // Leaderboard
 export const leaderboardAPI = {
+  getForHackathon: (hackathonId) =>
+    api.get(`/hackathons/${encodeURIComponent(hackathonId)}/leaderboard`),
   get: () => api.get('/leaderboard'),
+};
+
+// Hackathons
+export const hackathonAPI = {
+  list: (params = {}) => api.get('/hackathons', { params }),
+  get: (idOrSlug) => api.get(`/hackathons/${encodeURIComponent(idOrSlug)}`),
+  getMine: () => api.get('/hackathons/me'),
+  register: (idOrSlug) => api.post(`/hackathons/${encodeURIComponent(idOrSlug)}/register`),
+  unregister: (idOrSlug) => api.delete(`/hackathons/${encodeURIComponent(idOrSlug)}/register`),
+  create: (data) => api.post('/hackathons', data),
+  update: (idOrSlug, data) => api.put(`/hackathons/${encodeURIComponent(idOrSlug)}`, data),
+  delete: (idOrSlug, force = false) =>
+    api.delete(`/hackathons/${encodeURIComponent(idOrSlug)}`, { params: force ? { force: true } : {} }),
+  setPublished: (idOrSlug, is_published) =>
+    api.patch(`/hackathons/${encodeURIComponent(idOrSlug)}/publish`, { is_published }),
+  setResultsPublished: (idOrSlug, published) =>
+    api.patch(`/hackathons/${encodeURIComponent(idOrSlug)}/results`, { published }),
 };
 
 // Admin
 export const adminAPI = {
-  getStats: () => api.get('/admin/stats'),
+  getStats: (hackathonId) => api.get('/admin/stats', {
+    params: hackathonId ? { hackathon_id: hackathonId } : {},
+  }),
   getUsers: () => api.get('/admin/users'),
   createUser: (data) => api.post('/admin/users', data),
   deleteUser: (id) => api.delete(`/admin/users/${id}`),

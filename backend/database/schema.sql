@@ -1,5 +1,6 @@
 -- Hackathon Management System - MySQL Schema
 -- Run this in MAMP's phpMyAdmin or MySQL client
+-- Event tables and foreign keys are applied by npm run db:migrate after this baseline.
 
 CREATE DATABASE IF NOT EXISTS hackathon_db;
 USE hackathon_db;

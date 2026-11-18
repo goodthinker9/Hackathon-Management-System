@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
 import { useAuth } from '../context/AuthContext';
-import { teamAPI, projectAPI, leaderboardAPI, adminAPI } from '../services/api';
+import { adminAPI, hackathonAPI } from '../services/api';
+import HackathonPhaseBadge from '../components/HackathonPhaseBadge';
 import './DashboardPage.css';
 
 export default function DashboardPage() {
@@ -14,17 +15,11 @@ export default function DashboardPage() {
     const load = async () => {
       try {
         if (user.role === 'participant') {
-          const [teamRes, projectRes] = await Promise.allSettled([
-            teamAPI.getMyTeam(),
-            projectAPI.getMyProject(),
-          ]);
-          setData({
-            team: teamRes.status === 'fulfilled' ? teamRes.value.data.team : null,
-            project: projectRes.status === 'fulfilled' ? projectRes.value.data.project : null,
-          });
+          const res = await hackathonAPI.getMine();
+          setData({ hackathons: res.data.hackathons });
         } else if (user.role === 'judge') {
-          const res = await projectAPI.getAll();
-          setData({ projects: res.data.projects });
+          const res = await hackathonAPI.list({ phase: 'judging', limit: 100 });
+          setData({ hackathons: res.data.hackathons });
         } else if (user.role === 'admin') {
           const res = await adminAPI.getStats();
           setData({ stats: res.data.stats });
@@ -62,40 +57,52 @@ export default function DashboardPage() {
 }
 
 function ParticipantDashboard({ data }) {
+  const hackathons = data.hackathons || [];
   return (
     <div>
-      <div className="dash-cards">
-        <div className={`dash-card ${data.team ? 'status-ok' : 'status-pending'}`}>
-          <div className="dash-card-icon">👥</div>
-          <div className="dash-card-info">
-            <h3>{data.team ? data.team.name : 'No Team Yet'}</h3>
-            <p>{data.team ? `${data.team.members?.length || 0} members` : 'Create or join a team'}</p>
+      <div className="quick-actions">
+        <h2>My hackathons</h2>
+        {hackathons.length ? (
+          <div className="my-hackathons-grid">
+            {hackathons.map((hackathon) => {
+              const basePath = `/hackathons/${encodeURIComponent(hackathon.slug)}`;
+              const action = hackathon.phase === 'completed'
+                ? { label: 'View results', path: basePath }
+                : !hackathon.is_in_team
+                  ? { label: 'Set up team', path: `${basePath}/team` }
+                  : hackathon.phase === 'hacking' && !hackathon.has_project
+                  ? { label: 'Open project', path: `${basePath}/project` }
+                  : { label: 'View event', path: basePath };
+              return (
+                <article className="my-hackathon-card" key={hackathon.id}>
+                  <div className="my-hackathon-heading">
+                    <h3>{hackathon.title}</h3>
+                    <HackathonPhaseBadge phase={hackathon.phase} />
+                  </div>
+                  <p>Starts {new Date(hackathon.starts_at).toLocaleDateString()}</p>
+                  <div className="my-hackathon-actions">
+                    <Link className="btn btn-primary btn-sm" to={action.path}>{action.label}</Link>
+                    <Link className="btn btn-secondary btn-sm" to={basePath}>Details</Link>
+                  </div>
+                </article>
+              );
+            })}
           </div>
-          {!data.team && <Link to="/team" className="btn btn-primary btn-sm">Get Started</Link>}
-        </div>
-
-        <div className={`dash-card ${data.project ? 'status-ok' : 'status-pending'}`}>
-          <div className="dash-card-icon">🚀</div>
-          <div className="dash-card-info">
-            <h3>{data.project ? data.project.title : 'No Project Yet'}</h3>
-            <p>{data.project ? 'Project submitted' : 'Submit your project'}</p>
+        ) : (
+          <div className="empty-state card">
+            <h3>You have not registered for a hackathon yet</h3>
+            <p>Browse events and register to get started.</p>
+            <Link className="btn btn-primary" to="/hackathons">Explore hackathons</Link>
           </div>
-          {!data.project && data.team && (
-            <Link to="/project" className="btn btn-primary btn-sm">Submit</Link>
-          )}
-        </div>
+        )}
       </div>
 
       <div className="quick-actions">
         <h2>Quick Actions</h2>
         <div className="action-grid">
-          <Link to="/team" className="action-card">
-            <span className="action-icon">👥</span>
-            <span>Manage Team</span>
-          </Link>
-          <Link to="/project" className="action-card">
-            <span className="action-icon">🚀</span>
-            <span>My Project</span>
+          <Link to="/hackathons" className="action-card">
+            <span className="action-icon">⚡</span>
+            <span>Browse Hackathons</span>
           </Link>
           <Link to="/leaderboard" className="action-card">
             <span className="action-icon">🏆</span>
@@ -112,14 +119,28 @@ function ParticipantDashboard({ data }) {
 }
 
 function JudgeDashboard({ data }) {
-  const projects = data.projects || [];
+  const hackathons = data.hackathons || [];
   return (
     <div>
       <div className="dash-stat-row">
         <div className="dash-stat">
-          <span className="stat-val">{projects.length}</span>
-          <span className="stat-lbl">Projects to Judge</span>
+          <span className="stat-val">{hackathons.length}</span>
+          <span className="stat-lbl">Hackathons in Judging</span>
         </div>
+      </div>
+      <div className="my-hackathons-grid">
+        {hackathons.map((hackathon) => (
+          <article className="my-hackathon-card" key={hackathon.id}>
+            <div className="my-hackathon-heading">
+              <h3>{hackathon.title}</h3>
+              <HackathonPhaseBadge phase={hackathon.phase} />
+            </div>
+            <Link className="btn btn-primary btn-sm" to={`/judge?hackathon=${encodeURIComponent(hackathon.slug)}`}>
+              Score projects
+            </Link>
+          </article>
+        ))}
+        {!hackathons.length && <div className="empty-state card"><h3>No hackathons are being judged right now</h3></div>}
       </div>
       <div className="quick-actions">
         <h2>Quick Actions</h2>

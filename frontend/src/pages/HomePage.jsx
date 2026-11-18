@@ -66,7 +66,7 @@ export default function HomePage() {
         <div className="hero-content container">
           <div className="hero-badge">
             <span className="badge-dot"></span>
-            Hackathon Season 2024 is Live
+            Multiple hackathons. One platform.
           </div>
 
           <h1 className="hero-title">
@@ -84,8 +84,8 @@ export default function HomePage() {
             <Link to="/register" className="btn btn-primary btn-lg">
               🚀 Get Started Free
             </Link>
-            <Link to="/leaderboard" className="btn btn-outline btn-lg">
-              🏆 View Leaderboard
+            <Link to="/hackathons" className="btn btn-outline btn-lg">
+              ⚡ Explore Hackathons
             </Link>
           </div>
 
@@ -226,7 +226,7 @@ export default function HomePage() {
                 <h4>Platform</h4>
                 <Link to="/register">Register</Link>
                 <Link to="/login">Login</Link>
-                <Link to="/leaderboard">Leaderboard</Link>
+                <Link to="/hackathons">Hackathons</Link>
               </div>
               <div className="footer-col">
                 <h4>Features</h4>

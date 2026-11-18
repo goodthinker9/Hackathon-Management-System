@@ -52,8 +52,8 @@ export default function ProfilePage() {
     if (passwordForm.newPassword !== passwordForm.confirm) {
       return setPasswordMsg({ type: 'error', text: 'New passwords do not match' });
     }
-    if (passwordForm.newPassword.length < 6) {
-      return setPasswordMsg({ type: 'error', text: 'New password must be at least 6 characters' });
+    if (passwordForm.newPassword.length < 8) {
+      return setPasswordMsg({ type: 'error', text: 'New password must be at least 8 characters' });
     }
 
     setSavingPassword(true);
@@ -255,7 +255,7 @@ export default function ProfilePage() {
                     type="password"
                     value={passwordForm.newPassword}
                     onChange={(e) => setPasswordForm({ ...passwordForm, newPassword: e.target.value })}
-                    placeholder="Min. 6 characters"
+                    placeholder="Min. 8 characters"
                     required
                   />
                 </div>

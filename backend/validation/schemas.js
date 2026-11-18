@@ -59,4 +59,103 @@ const updateProfile = z.object({
   bio: z.string().max(300, 'Bio must be 300 characters or fewer').optional().or(z.literal('')),
 });
 
-module.exports = { register, login, createTeam, joinTeam, submitProject, submitScore, createUser, updateProfile };
+const updatePassword = z.object({
+  currentPassword: z.string().min(1, 'Current password is required'),
+  newPassword: z.string().min(8, 'New password must be at least 8 characters').max(128, 'New password must be 128 characters or fewer'),
+}).superRefine(({ currentPassword, newPassword }, context) => {
+  if (currentPassword === newPassword) {
+    context.addIssue({
+      code: 'custom',
+      path: ['newPassword'],
+      message: 'New password must differ from current password',
+    });
+  }
+});
+
+const eventSlug = z.string()
+  .trim()
+  .min(1, 'Slug is required')
+  .max(200, 'Slug must be 200 characters or fewer')
+  .regex(/^(?=.*[a-z])[a-z0-9]+(?:-[a-z0-9]+)*$/, 'Slug must contain lowercase letters, numbers, and hyphens');
+
+const hackathonFields = {
+  title: z.string().trim().min(1, 'Title is required').max(200, 'Title must be 200 characters or fewer'),
+  slug: eventSlug.optional().or(z.literal('')),
+  description: z.string().trim().min(1, 'Description is required').max(10000, 'Description must be 10000 characters or fewer'),
+  banner_url: z.string().url('Banner must be a valid URL').max(500).nullable().optional().or(z.literal('')),
+  registration_opens_at: z.coerce.date(),
+  registration_closes_at: z.coerce.date(),
+  starts_at: z.coerce.date(),
+  submission_deadline: z.coerce.date(),
+  judging_ends_at: z.coerce.date(),
+  max_team_size: z.coerce.number().int().min(1).max(10),
+};
+
+const hackathonSchedule = (schema) => schema.superRefine((event, context) => {
+  const { registration_opens_at: opens, registration_closes_at: closes,
+    starts_at: starts, submission_deadline: deadline, judging_ends_at: judgingEnds } = event;
+  if (opens >= closes) {
+    context.addIssue({ code: 'custom', path: ['registration_closes_at'], message: 'Registration must close after it opens' });
+  }
+  if (closes > deadline) {
+    context.addIssue({ code: 'custom', path: ['registration_closes_at'], message: 'Registration must close by the submission deadline' });
+  }
+  if (starts >= deadline) {
+    context.addIssue({ code: 'custom', path: ['starts_at'], message: 'Hackathon must start before the submission deadline' });
+  }
+  if (deadline >= judgingEnds) {
+    context.addIssue({ code: 'custom', path: ['judging_ends_at'], message: 'Judging must end after the submission deadline' });
+  }
+});
+
+const createHackathon = hackathonSchedule(z.object(hackathonFields));
+const updateHackathon = createHackathon;
+
+const hackathonListQuery = z.object({
+  phase: z.enum(['draft', 'upcoming', 'registration', 'hacking', 'judging', 'completed']).optional(),
+  search: z.string().trim().max(100, 'Search must be 100 characters or fewer').optional().default(''),
+  page: z.coerce.number().int().min(1).max(10000).optional().default(1),
+  limit: z.coerce.number().int().min(1).max(100).optional().default(12),
+});
+
+const hackathonParam = z.object({
+  hackathonId: z.string().trim().min(1).max(200),
+});
+
+const hackathonIdPath = z.object({
+  id: z.string().trim().min(1).max(200),
+});
+
+const hackathonProjectParam = z.object({
+  hackathonId: z.string().trim().min(1).max(200),
+  id: z.string().regex(/^[1-9]\d*$/, 'ID must be a positive integer'),
+});
+
+const idParam = z.object({
+  id: z.string().regex(/^[1-9]\d*$/, 'ID must be a positive integer'),
+});
+
+const adminStatsQuery = z.object({
+  hackathon_id: z.coerce.number().int().positive().optional(),
+});
+
+const forceQuery = z.object({
+  force: z.enum(['true', 'false']).optional(),
+});
+
+const publishHackathon = z.object({
+  is_published: z.boolean(),
+});
+
+const publishResults = z.object({
+  published: z.boolean(),
+});
+
+const emptyBody = z.object({}).default({});
+
+module.exports = {
+  register, login, createTeam, joinTeam, submitProject, submitScore, createUser, updateProfile,
+  updatePassword, createHackathon, updateHackathon, hackathonListQuery, hackathonParam, idParam,
+  hackathonIdPath, hackathonProjectParam, adminStatsQuery,
+  forceQuery, publishHackathon, publishResults, emptyBody,
+};

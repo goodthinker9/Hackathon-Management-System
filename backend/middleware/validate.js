@@ -1,6 +1,10 @@
-module.exports = (schema) => (req, res, next) => {
-  const result = schema.safeParse(req.body);
+module.exports = (schema, source = 'body') => (req, res, next) => {
+  const result = schema.safeParse(req[source]);
   if (!result.success) return next(result.error);
-  req.body = result.data;
+  if (source === 'body') {
+    req.body = result.data;
+  } else {
+    req.validated = { ...req.validated, [source]: result.data };
+  }
   next();
 };

@@ -5,8 +5,14 @@ const ScoreModel = require('../models/scoreModel');
 const db = require('../config/db');
 const bcrypt = require('bcryptjs');
 const { HttpError } = require('../middleware/errorHandler');
+const HackathonModel = require('../models/hackathonModel');
 
-const getStats = async (_req, res) => {
+const getStats = async (req, res) => {
+  const hackathonId = req.validated.query.hackathon_id;
+  if (hackathonId) {
+    const stats = await HackathonModel.getStats(hackathonId);
+    return res.json({ stats: { ...stats, users: stats.registrations } });
+  }
   const [[usersCount]] = await db.query('SELECT COUNT(*) AS count FROM users');
   const [[teamsCount]] = await db.query('SELECT COUNT(*) AS count FROM teams');
   const [[projectsCount]] = await db.query('SELECT COUNT(*) AS count FROM projects');

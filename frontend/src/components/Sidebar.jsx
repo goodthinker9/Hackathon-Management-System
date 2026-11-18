@@ -6,19 +6,20 @@ import './Sidebar.css';
 const navItems = {
   participant: [
     { path: '/dashboard', icon: '🏠', label: 'Dashboard' },
-    { path: '/team', icon: '👥', label: 'My Team' },
-    { path: '/project', icon: '🚀', label: 'My Project' },
+    { path: '/hackathons', icon: '⚡', label: 'Hackathons' },
     { path: '/leaderboard', icon: '🏆', label: 'Leaderboard' },
     { path: '/profile', icon: '👤', label: 'My Profile' },
   ],
   judge: [
     { path: '/dashboard', icon: '🏠', label: 'Dashboard' },
+    { path: '/hackathons', icon: '⚡', label: 'Hackathons' },
     { path: '/judge', icon: '⚖️', label: 'Judge Panel' },
     { path: '/leaderboard', icon: '🏆', label: 'Leaderboard' },
     { path: '/profile', icon: '👤', label: 'My Profile' },
   ],
   admin: [
     { path: '/dashboard', icon: '🏠', label: 'Dashboard' },
+    { path: '/hackathons', icon: '⚡', label: 'Hackathons' },
     { path: '/admin', icon: '⚙️', label: 'Admin Panel' },
     { path: '/leaderboard', icon: '🏆', label: 'Leaderboard' },
     { path: '/profile', icon: '👤', label: 'My Profile' },
@@ -70,7 +71,7 @@ export default function Sidebar() {
           <Link
             key={item.path}
             to={item.path}
-            className={`sidebar-link ${location.pathname === item.path ? 'active' : ''}`}
+            className={`sidebar-link ${location.pathname === item.path || (item.path === '/hackathons' && location.pathname.startsWith('/hackathons')) ? 'active' : ''}`}
           >
             <span className="link-icon">{item.icon}</span>
             <span className="link-label">{item.label}</span>

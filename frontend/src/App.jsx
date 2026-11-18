@@ -14,6 +14,8 @@ import LeaderboardPage from './pages/LeaderboardPage';
 import JudgePage from './pages/JudgePage';
 import AdminPage from './pages/AdminPage';
 import ProfilePage from './pages/ProfilePage';
+import HackathonsPage from './pages/HackathonsPage';
+import HackathonDetailPage from './pages/HackathonDetailPage';
 
 const ProtectedRoute = ({ children, roles }) => {
   const { user, loading } = useAuth();
@@ -36,17 +38,21 @@ function AppRoutes() {
       <Route path="/" element={<HomePage />} />
       <Route path="/login" element={<PublicRoute><LoginPage /></PublicRoute>} />
       <Route path="/register" element={<PublicRoute><RegisterPage /></PublicRoute>} />
+      <Route path="/hackathons" element={<HackathonsPage />} />
+      <Route path="/hackathons/:slug" element={<HackathonDetailPage />} />
       <Route path="/leaderboard" element={<LeaderboardPage />} />
 
       <Route path="/dashboard" element={
         <ProtectedRoute><DashboardPage /></ProtectedRoute>
       } />
-      <Route path="/team" element={
+      <Route path="/hackathons/:slug/team" element={
         <ProtectedRoute roles={['participant']}><TeamPage /></ProtectedRoute>
       } />
-      <Route path="/project" element={
+      <Route path="/hackathons/:slug/project" element={
         <ProtectedRoute roles={['participant']}><ProjectPage /></ProtectedRoute>
       } />
+      <Route path="/team" element={<Navigate to="/hackathons" replace />} />
+      <Route path="/project" element={<Navigate to="/hackathons" replace />} />
       <Route path="/judge" element={
         <ProtectedRoute roles={['judge']}><JudgePage /></ProtectedRoute>
       } />

@@ -32,6 +32,9 @@ export default function Navbar() {
           <Link to="/leaderboard" className={`nav-link ${isActive('/leaderboard') ? 'active' : ''}`}>
             🏆 Leaderboard
           </Link>
+          <Link to="/hackathons" className={`nav-link ${location.pathname.startsWith('/hackathons') ? 'active' : ''}`}>
+            ⚡ Hackathons
+          </Link>
 
           {user ? (
             <>
@@ -39,10 +42,7 @@ export default function Navbar() {
                 Dashboard
               </Link>
               {user.role === 'participant' && (
-                <>
-                  <Link to="/team" className={`nav-link ${isActive('/team') ? 'active' : ''}`}>Team</Link>
-                  <Link to="/project" className={`nav-link ${isActive('/project') ? 'active' : ''}`}>Project</Link>
-                </>
+                <Link to="/hackathons" className={`nav-link ${location.pathname.startsWith('/hackathons') ? 'active' : ''}`}>My Hackathons</Link>
               )}
               {user.role === 'judge' && (
                 <Link to="/judge" className={`nav-link ${isActive('/judge') ? 'active' : ''}`}>Judge Panel</Link>

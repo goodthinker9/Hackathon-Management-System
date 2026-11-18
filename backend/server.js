@@ -36,6 +36,7 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Routes
 app.use('/api/auth', require('./routes/authRoutes'));
+app.use('/api/hackathons', require('./routes/hackathonRoutes'));
 app.use('/api/profile', require('./routes/profileRoutes'));
 app.use('/api/teams', require('./routes/teamRoutes'));
 app.use('/api/projects', require('./routes/projectRoutes'));

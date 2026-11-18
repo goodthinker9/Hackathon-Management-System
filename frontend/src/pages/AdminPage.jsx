@@ -2,9 +2,10 @@ import React, { useEffect, useState } from 'react';
 import Sidebar from '../components/Sidebar';
 import { adminAPI } from '../services/api';
 import ValidationErrors from '../components/ValidationErrors';
+import AdminHackathonsTab from '../components/AdminHackathonsTab';
 import './AdminPage.css';
 
-const TABS = ['Users', 'Teams', 'Projects', 'Scores'];
+const TABS = ['Hackathons', 'Users', 'Teams', 'Projects', 'Scores'];
 
 export default function AdminPage() {
   const [tab, setTab] = useState('Users');
@@ -92,7 +93,7 @@ export default function AdminPage() {
       <main className="main-content">
         <div className="page-header">
           <h1>⚙️ Admin Dashboard</h1>
-          <p>Manage users, teams, projects, and scores.</p>
+          <p>Manage hackathons, users, teams, projects, and scores.</p>
         </div>
 
         {/* Stats */}
@@ -135,6 +136,7 @@ export default function AdminPage() {
                 success={success}
               />
             )}
+            {tab === 'Hackathons' && <AdminHackathonsTab />}
             {tab === 'Teams' && <TeamsTab teams={data.teams} />}
             {tab === 'Projects' && <ProjectsTab projects={data.projects} onDelete={handleDeleteProject} />}
             {tab === 'Scores' && <ScoresTab scores={data.scores} />}

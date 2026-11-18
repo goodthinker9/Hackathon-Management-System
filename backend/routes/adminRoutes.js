@@ -7,12 +7,12 @@ const {
 const { protect, requireRole } = require('../middleware/authMiddleware');
 const asyncHandler = require('../middleware/asyncHandler');
 const validate = require('../middleware/validate');
-const { createUser: createUserSchema } = require('../validation/schemas');
+const { createUser: createUserSchema, adminStatsQuery } = require('../validation/schemas');
 
 // All admin routes require admin role
 router.use(protect, requireRole('admin'));
 
-router.get('/stats', asyncHandler(getStats));
+router.get('/stats', validate(adminStatsQuery, 'query'), asyncHandler(getStats));
 router.get('/users', asyncHandler(getAllUsers));
 router.post('/users', validate(createUserSchema), asyncHandler(createUser));
 router.delete('/users/:id', asyncHandler(deleteUser));

@@ -5,6 +5,45 @@
   margin-bottom: 40px;
 }
 
+.my-hackathons-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 16px;
+  margin: 16px 0 32px;
+}
+
+.my-hackathon-card {
+  padding: 20px;
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-md);
+  background: var(--card-bg);
+}
+
+.my-hackathon-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.my-hackathon-heading h3 {
+  color: var(--text-primary);
+  font-size: 17px;
+}
+
+.my-hackathon-card > p {
+  margin-bottom: 16px;
+  color: var(--text-muted);
+  font-size: 13px;
+}
+
+.my-hackathon-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
 .dash-card {
   display: flex;
   align-items: center;
