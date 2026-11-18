@@ -11,6 +11,8 @@ CREATE TABLE IF NOT EXISTS users (
   email VARCHAR(150) NOT NULL UNIQUE,
   password VARCHAR(255) NOT NULL,
   role ENUM('admin', 'judge', 'participant') NOT NULL DEFAULT 'participant',
+  bio TEXT DEFAULT NULL,
+  avatar VARCHAR(500) DEFAULT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -22,6 +24,7 @@ CREATE TABLE IF NOT EXISTS teams (
   owner_id INT NOT NULL,
   invite_code VARCHAR(20) NOT NULL UNIQUE,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  KEY idx_teams_owner_id (owner_id),
   FOREIGN KEY (owner_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
@@ -32,6 +35,7 @@ CREATE TABLE IF NOT EXISTS team_members (
   user_id INT NOT NULL,
   joined_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   UNIQUE KEY unique_team_member (team_id, user_id),
+  KEY idx_team_members_user_id (user_id),
   FOREIGN KEY (team_id) REFERENCES teams(id) ON DELETE CASCADE,
   FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
@@ -45,6 +49,8 @@ CREATE TABLE IF NOT EXISTS projects (
   team_id INT NOT NULL,
   submitted_by INT NOT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  KEY idx_projects_team_id (team_id),
+  KEY idx_projects_submitted_by (submitted_by),
   FOREIGN KEY (team_id) REFERENCES teams(id) ON DELETE CASCADE,
   FOREIGN KEY (submitted_by) REFERENCES users(id) ON DELETE CASCADE
 );
@@ -58,12 +64,8 @@ CREATE TABLE IF NOT EXISTS scores (
   feedback TEXT,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   UNIQUE KEY unique_judge_project (project_id, judge_id),
+  KEY idx_scores_project_id (project_id),
+  KEY idx_scores_judge_id (judge_id),
   FOREIGN KEY (project_id) REFERENCES projects(id) ON DELETE CASCADE,
   FOREIGN KEY (judge_id) REFERENCES users(id) ON DELETE CASCADE
 );
-
--- Seed admin user (password: admin123)
--- Hash generated with bcryptjs: bcrypt.hash('admin123', 10)
-INSERT INTO users (name, email, password, role) VALUES
-('Admin User', 'admin@hackathon.com', '$2a$10$7gDZX9S0WfcDVy.roDTQ6.roRkSWZVRKqGQc4JX7gmj81yetfZ3xe', 'admin')
-ON DUPLICATE KEY UPDATE password = '$2a$10$7gDZX9S0WfcDVy.roDTQ6.roRkSWZVRKqGQc4JX7gmj81yetfZ3xe', role = 'admin';

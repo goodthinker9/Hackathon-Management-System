@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Sidebar from '../components/Sidebar';
 import { projectAPI, scoreAPI } from '../services/api';
+import ValidationErrors from '../components/ValidationErrors';
 import './InnerPage.css';
 
 export default function ProjectPage() {
@@ -9,6 +10,7 @@ export default function ProjectPage() {
   const [loading, setLoading] = useState(true);
   const [form, setForm] = useState({ title: '', description: '', github_link: '' });
   const [error, setError] = useState('');
+  const [validationErrors, setValidationErrors] = useState([]);
   const [success, setSuccess] = useState('');
   const [submitting, setSubmitting] = useState(false);
 
@@ -32,12 +34,14 @@ export default function ProjectPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(''); setSuccess(''); setSubmitting(true);
+    setValidationErrors([]);
     try {
       const res = await projectAPI.submit(form);
       setProject(res.data.project);
       setSuccess('Project submitted successfully!');
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to submit project');
+      setValidationErrors(err.response?.data?.errors || []);
     } finally {
       setSubmitting(false);
     }
@@ -107,6 +111,7 @@ export default function ProjectPage() {
         ) : (
           <div className="inner-content fade-in">
             {error && <div className="alert alert-error">{error}</div>}
+            <ValidationErrors errors={validationErrors} />
             {success && <div className="alert alert-success">{success}</div>}
             <div className="card">
               <h2 className="card-title">Submit Your Project</h2>

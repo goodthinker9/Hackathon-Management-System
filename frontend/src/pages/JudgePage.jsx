@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Sidebar from '../components/Sidebar';
 import { projectAPI, scoreAPI } from '../services/api';
+import ValidationErrors from '../components/ValidationErrors';
 import './InnerPage.css';
 
 export default function JudgePage() {
@@ -10,6 +11,7 @@ export default function JudgePage() {
   const [loading, setLoading] = useState(true);
   const [scoreForm, setScoreForm] = useState({ score: 5, feedback: '' });
   const [error, setError] = useState('');
+  const [validationErrors, setValidationErrors] = useState([]);
   const [success, setSuccess] = useState('');
   const [submitting, setSubmitting] = useState(false);
 
@@ -31,6 +33,7 @@ export default function JudgePage() {
   const selectProject = async (project) => {
     setSelected(project);
     setError(''); setSuccess('');
+    setValidationErrors([]);
     setScoreForm({ score: 5, feedback: '' });
     try {
       const res = await scoreAPI.getByProject(project.id);
@@ -43,6 +46,7 @@ export default function JudgePage() {
   const handleScore = async (e) => {
     e.preventDefault();
     setError(''); setSuccess(''); setSubmitting(true);
+    setValidationErrors([]);
     try {
       await scoreAPI.submit({
         project_id: selected.id,
@@ -55,6 +59,7 @@ export default function JudgePage() {
       setScores(res.data.scores);
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to submit score');
+      setValidationErrors(err.response?.data?.errors || []);
     } finally {
       setSubmitting(false);
     }
@@ -132,6 +137,7 @@ export default function JudgePage() {
                   </div>
 
                   {error && <div className="alert alert-error">{error}</div>}
+                  <ValidationErrors errors={validationErrors} />
                   {success && <div className="alert alert-success">{success}</div>}
 
                   {!success && (

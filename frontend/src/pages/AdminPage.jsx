@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Sidebar from '../components/Sidebar';
 import { adminAPI } from '../services/api';
+import ValidationErrors from '../components/ValidationErrors';
 import './AdminPage.css';
 
 const TABS = ['Users', 'Teams', 'Projects', 'Scores'];
@@ -12,6 +13,7 @@ export default function AdminPage() {
   const [loading, setLoading] = useState(true);
   const [newUser, setNewUser] = useState({ name: '', email: '', password: '', role: 'participant' });
   const [error, setError] = useState('');
+  const [validationErrors, setValidationErrors] = useState([]);
   const [success, setSuccess] = useState('');
 
   useEffect(() => {
@@ -65,6 +67,7 @@ export default function AdminPage() {
   const handleCreateUser = async (e) => {
     e.preventDefault();
     setError(''); setSuccess('');
+    setValidationErrors([]);
     try {
       const res = await adminAPI.createUser(newUser);
       setData((d) => ({ ...d, users: [res.data.user, ...d.users] }));
@@ -72,6 +75,7 @@ export default function AdminPage() {
       setNewUser({ name: '', email: '', password: '', role: 'participant' });
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to create user');
+      setValidationErrors(err.response?.data?.errors || []);
     }
   };
 
@@ -127,6 +131,7 @@ export default function AdminPage() {
                 setNewUser={setNewUser}
                 onCreateUser={handleCreateUser}
                 error={error}
+                validationErrors={validationErrors}
                 success={success}
               />
             )}
@@ -140,12 +145,13 @@ export default function AdminPage() {
   );
 }
 
-function UsersTab({ users, onDelete, newUser, setNewUser, onCreateUser, error, success }) {
+function UsersTab({ users, onDelete, newUser, setNewUser, onCreateUser, error, validationErrors, success }) {
   return (
     <div>
       <div className="card" style={{ marginBottom: 24 }}>
         <h3 className="card-title">Create New User</h3>
         {error && <div className="alert alert-error">{error}</div>}
+        <ValidationErrors errors={validationErrors} />
         {success && <div className="alert alert-success">{success}</div>}
         <form onSubmit={onCreateUser} className="create-user-form">
           <div className="form-group">

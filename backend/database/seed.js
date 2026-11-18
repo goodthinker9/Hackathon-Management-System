@@ -7,24 +7,26 @@ const db = require('../config/db');
 
 async function seed() {
   try {
-    const password = 'admin123';
+    const email = process.env.ADMIN_EMAIL;
+    const password = process.env.ADMIN_PASSWORD;
+    if (!email || !password) {
+      throw new Error('ADMIN_EMAIL and ADMIN_PASSWORD must be set to seed the admin user.');
+    }
     const hash = await bcrypt.hash(password, 10);
 
-    // Upsert admin user
     await db.query(
       `INSERT INTO users (name, email, password, role)
        VALUES (?, ?, ?, 'admin')
        ON DUPLICATE KEY UPDATE password = ?, role = 'admin'`,
-      ['Admin User', 'admin@hackathon.com', hash, hash]
+      ['Admin User', email, hash, hash]
     );
 
     console.log('✅ Admin user seeded successfully');
-    console.log('   Email:    admin@hackathon.com');
-    console.log('   Password: admin123');
-    process.exit(0);
   } catch (err) {
     console.error('❌ Seed failed:', err.message);
-    process.exit(1);
+    process.exitCode = 1;
+  } finally {
+    await db.end();
   }
 }
 

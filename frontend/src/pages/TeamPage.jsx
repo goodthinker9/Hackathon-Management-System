@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Sidebar from '../components/Sidebar';
 import { teamAPI } from '../services/api';
+import ValidationErrors from '../components/ValidationErrors';
 import './InnerPage.css';
 
 export default function TeamPage() {
@@ -9,6 +10,7 @@ export default function TeamPage() {
   const [view, setView] = useState('create'); // 'create' | 'join'
   const [form, setForm] = useState({ name: '', description: '', invite_code: '' });
   const [error, setError] = useState('');
+  const [validationErrors, setValidationErrors] = useState([]);
   const [success, setSuccess] = useState('');
   const [submitting, setSubmitting] = useState(false);
 
@@ -30,12 +32,14 @@ export default function TeamPage() {
   const handleCreate = async (e) => {
     e.preventDefault();
     setError(''); setSuccess(''); setSubmitting(true);
+    setValidationErrors([]);
     try {
       const res = await teamAPI.create({ name: form.name, description: form.description });
       setTeam(res.data.team);
       setSuccess('Team created successfully!');
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to create team');
+      setValidationErrors(err.response?.data?.errors || []);
     } finally {
       setSubmitting(false);
     }
@@ -44,12 +48,14 @@ export default function TeamPage() {
   const handleJoin = async (e) => {
     e.preventDefault();
     setError(''); setSuccess(''); setSubmitting(true);
+    setValidationErrors([]);
     try {
       const res = await teamAPI.join({ invite_code: form.invite_code });
       setTeam(res.data.team);
       setSuccess('Joined team successfully!');
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to join team');
+      setValidationErrors(err.response?.data?.errors || []);
     } finally {
       setSubmitting(false);
     }
@@ -86,6 +92,7 @@ export default function TeamPage() {
             </div>
 
             {error && <div className="alert alert-error">{error}</div>}
+            <ValidationErrors errors={validationErrors} />
             {success && <div className="alert alert-success">{success}</div>}
 
             {view === 'create' ? (

@@ -1,7 +1,12 @@
 import axios from 'axios';
 
+const apiUrl = import.meta.env.VITE_API_URL || '/api';
+export const API_ORIGIN = /^https?:\/\//i.test(apiUrl)
+  ? apiUrl.replace(/\/api\/?$/, '')
+  : '';
+
 const api = axios.create({
-  baseURL: '/api',
+  baseURL: apiUrl,
   headers: { 'Content-Type': 'application/json' },
 });
 
@@ -18,6 +23,8 @@ api.interceptors.request.use((config) => {
 api.interceptors.response.use(
   (response) => response,
   (error) => {
+    const message = error.response?.data?.message || error.message || 'An unexpected API error occurred';
+    window.dispatchEvent(new CustomEvent('api-error', { detail: message }));
     if (error.response?.status === 401) {
       localStorage.removeItem('token');
       localStorage.removeItem('user');

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import ValidationErrors from '../components/ValidationErrors';
 import './AuthPage.css';
 
 export default function LoginPage() {
@@ -8,6 +9,7 @@ export default function LoginPage() {
   const navigate = useNavigate();
   const [form, setForm] = useState({ email: '', password: '' });
   const [error, setError] = useState('');
+  const [validationErrors, setValidationErrors] = useState([]);
   const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
@@ -15,12 +17,14 @@ export default function LoginPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+    setValidationErrors([]);
     setLoading(true);
     try {
       const user = await login(form.email, form.password);
       navigate('/dashboard');
     } catch (err) {
       setError(err.response?.data?.message || 'Login failed. Please try again.');
+      setValidationErrors(err.response?.data?.errors || []);
     } finally {
       setLoading(false);
     }
@@ -44,6 +48,7 @@ export default function LoginPage() {
           </div>
 
           {error && <div className="alert alert-error">{error}</div>}
+          <ValidationErrors errors={validationErrors} />
 
           <form onSubmit={handleSubmit}>
             <div className="form-group">
@@ -80,13 +85,7 @@ export default function LoginPage() {
             Don't have an account? <Link to="/register">Register here</Link>
           </div>
 
-          <div className="demo-credentials">
-            <p className="demo-title">Demo Credentials</p>
-            <div className="demo-item">
-              <span className="badge badge-admin">Admin</span>
-              <span>admin@hackathon.com / admin123</span>
-            </div>
-          </div>
+          <p className="auth-footer">Admin accounts are provisioned using the backend seed configuration.</p>
         </div>
       </div>
     </div>

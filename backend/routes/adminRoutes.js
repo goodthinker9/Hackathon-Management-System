@@ -5,17 +5,20 @@ const {
   getAllTeams, getAllProjects, deleteProject, getAllScores
 } = require('../controllers/adminController');
 const { protect, requireRole } = require('../middleware/authMiddleware');
+const asyncHandler = require('../middleware/asyncHandler');
+const validate = require('../middleware/validate');
+const { createUser: createUserSchema } = require('../validation/schemas');
 
 // All admin routes require admin role
 router.use(protect, requireRole('admin'));
 
-router.get('/stats', getStats);
-router.get('/users', getAllUsers);
-router.post('/users', createUser);
-router.delete('/users/:id', deleteUser);
-router.get('/teams', getAllTeams);
-router.get('/projects', getAllProjects);
-router.delete('/projects/:id', deleteProject);
-router.get('/scores', getAllScores);
+router.get('/stats', asyncHandler(getStats));
+router.get('/users', asyncHandler(getAllUsers));
+router.post('/users', validate(createUserSchema), asyncHandler(createUser));
+router.delete('/users/:id', asyncHandler(deleteUser));
+router.get('/teams', asyncHandler(getAllTeams));
+router.get('/projects', asyncHandler(getAllProjects));
+router.delete('/projects/:id', asyncHandler(deleteProject));
+router.get('/scores', asyncHandler(getAllScores));
 
 module.exports = router;

@@ -1,10 +1,9 @@
 import React, { useState, useRef } from 'react';
 import Sidebar from '../components/Sidebar';
 import { useAuth } from '../context/AuthContext';
-import { profileAPI } from '../services/api';
+import { profileAPI, API_ORIGIN } from '../services/api';
+import ValidationErrors from '../components/ValidationErrors';
 import './ProfilePage.css';
-
-const AVATAR_BASE = 'http://localhost:5000';
 
 export default function ProfilePage() {
   const { user, updateUser } = useAuth();
@@ -13,6 +12,7 @@ export default function ProfilePage() {
   const [passwordForm, setPasswordForm] = useState({ currentPassword: '', newPassword: '', confirm: '' });
 
   const [profileMsg, setProfileMsg] = useState({ type: '', text: '' });
+  const [profileErrors, setProfileErrors] = useState([]);
   const [passwordMsg, setPasswordMsg] = useState({ type: '', text: '' });
   const [avatarMsg, setAvatarMsg] = useState({ type: '', text: '' });
 
@@ -21,7 +21,7 @@ export default function ProfilePage() {
   const [uploadingAvatar, setUploadingAvatar] = useState(false);
 
   const [avatarPreview, setAvatarPreview] = useState(
-    user.avatar ? `${AVATAR_BASE}/${user.avatar}` : null
+    user.avatar ? `${API_ORIGIN}/${user.avatar}` : null
   );
 
   const fileInputRef = useRef(null);
@@ -30,6 +30,7 @@ export default function ProfilePage() {
   const handleProfileSubmit = async (e) => {
     e.preventDefault();
     setProfileMsg({ type: '', text: '' });
+    setProfileErrors([]);
     setSavingProfile(true);
     try {
       const res = await profileAPI.update(profileForm);
@@ -37,6 +38,7 @@ export default function ProfilePage() {
       setProfileMsg({ type: 'success', text: 'Profile updated successfully!' });
     } catch (err) {
       setProfileMsg({ type: 'error', text: err.response?.data?.message || 'Failed to update profile' });
+      setProfileErrors(err.response?.data?.errors || []);
     } finally {
       setSavingProfile(false);
     }
@@ -102,7 +104,7 @@ export default function ProfilePage() {
       setAvatarMsg({ type: 'success', text: 'Photo updated successfully!' });
     } catch (err) {
       setAvatarMsg({ type: 'error', text: err.response?.data?.message || 'Upload failed' });
-      setAvatarPreview(user.avatar ? `${AVATAR_BASE}/${user.avatar}` : null);
+      setAvatarPreview(user.avatar ? `${API_ORIGIN}/${user.avatar}` : null);
     } finally {
       setUploadingAvatar(false);
     }
@@ -187,6 +189,7 @@ export default function ProfilePage() {
               {profileMsg.text && (
                 <div className={`alert alert-${profileMsg.type}`}>{profileMsg.text}</div>
               )}
+              <ValidationErrors errors={profileErrors} />
               <form onSubmit={handleProfileSubmit}>
                 <div className="form-group">
                   <label>Full Name *</label>

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import ValidationErrors from '../components/ValidationErrors';
 import './AuthPage.css';
 
 export default function RegisterPage() {
@@ -8,6 +9,7 @@ export default function RegisterPage() {
   const navigate = useNavigate();
   const [form, setForm] = useState({ name: '', email: '', password: '', confirm: '' });
   const [error, setError] = useState('');
+  const [validationErrors, setValidationErrors] = useState([]);
   const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
@@ -15,6 +17,7 @@ export default function RegisterPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+    setValidationErrors([]);
 
     if (form.password !== form.confirm) {
       return setError('Passwords do not match');
@@ -29,6 +32,7 @@ export default function RegisterPage() {
       navigate('/dashboard');
     } catch (err) {
       setError(err.response?.data?.message || 'Registration failed. Please try again.');
+      setValidationErrors(err.response?.data?.errors || []);
     } finally {
       setLoading(false);
     }
@@ -52,6 +56,7 @@ export default function RegisterPage() {
           </div>
 
           {error && <div className="alert alert-error">{error}</div>}
+          <ValidationErrors errors={validationErrors} />
 
           <form onSubmit={handleSubmit}>
             <div className="form-group">
