@@ -3,6 +3,7 @@ import Sidebar from '../components/Sidebar';
 import { adminAPI } from '../services/api';
 import ValidationErrors from '../components/ValidationErrors';
 import AdminHackathonsTab from '../components/AdminHackathonsTab';
+import Icon from '../components/Icon';
 import './AdminPage.css';
 
 const TABS = ['Hackathons', 'Users', 'Teams', 'Projects', 'Scores'];
@@ -81,10 +82,10 @@ export default function AdminPage() {
   };
 
   const statItems = [
-    { icon: '👤', label: 'Users', value: stats.users || 0, color: '#6c63ff' },
-    { icon: '👥', label: 'Teams', value: stats.teams || 0, color: '#ff6584' },
-    { icon: '🚀', label: 'Projects', value: stats.projects || 0, color: '#43e97b' },
-    { icon: '⭐', label: 'Scores', value: stats.scores || 0, color: '#f7971e' },
+    { icon: 'user', label: 'Users', value: stats.users || 0, color: '#6c63ff' },
+    { icon: 'users', label: 'Teams', value: stats.teams || 0, color: '#ff6584' },
+    { icon: 'rocket', label: 'Projects', value: stats.projects || 0, color: '#43e97b' },
+    { icon: 'award', label: 'Scores', value: stats.scores || 0, color: '#f7971e' },
   ];
 
   return (
@@ -92,7 +93,7 @@ export default function AdminPage() {
       <Sidebar />
       <main className="main-content">
         <div className="page-header">
-          <h1>⚙️ Admin Dashboard</h1>
+          <h1><Icon name="settings" size={30} /> Admin Dashboard</h1>
           <p>Manage hackathons, users, teams, projects, and scores.</p>
         </div>
 
@@ -100,7 +101,7 @@ export default function AdminPage() {
         <div className="admin-stats-grid" style={{ marginBottom: 32 }}>
           {statItems.map((s, i) => (
             <div className="admin-stat-card" key={i} style={{ '--accent-color': s.color }}>
-              <div className="admin-stat-icon">{s.icon}</div>
+              <div className="admin-stat-icon"><Icon name={s.icon} size={30} /></div>
               <div className="admin-stat-val">{s.value}</div>
               <div className="admin-stat-lbl">{s.label}</div>
             </div>

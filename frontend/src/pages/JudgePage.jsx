@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
 import HackathonPhaseBadge from '../components/HackathonPhaseBadge';
+import Icon from '../components/Icon';
 import { useAuth } from '../context/AuthContext';
 import { hackathonAPI, projectAPI, scoreAPI } from '../services/api';
 import ValidationErrors from '../components/ValidationErrors';
@@ -101,7 +102,7 @@ export default function JudgePage() {
       <Sidebar />
       <main className="main-content">
         <div className="page-header">
-          <h1>⚖️ Judge Panel</h1>
+          <h1><Icon name="scale" size={30} /> Judge Panel</h1>
           <p>Choose an event currently in judging, then review and score its projects.</p>
         </div>
         <div className="card judge-event-selector">
@@ -119,31 +120,31 @@ export default function JudgePage() {
         {loading ? (
           <div className="loading-spinner"><div className="spinner" /></div>
         ) : !selectedHackathon ? (
-          <div className="empty-state card"><div className="empty-icon">⚖️</div><h3>No hackathon is in judging right now</h3></div>
+          <div className="empty-state card"><div className="empty-icon"><Icon name="scale" size={44} /></div><h3>No hackathon is in judging right now</h3></div>
         ) : (
           <div className="judge-layout fade-in">
             <div className="projects-list-panel">
               <h3 className="panel-title">Projects ({projects.length})</h3>
               {projects.length === 0 ? (
-                <div className="empty-state"><div className="empty-icon">📭</div><h3>No projects submitted</h3></div>
+                <div className="empty-state"><div className="empty-icon"><Icon name="inbox" size={44} /></div><h3>No projects submitted</h3></div>
               ) : projects.map((project) => (
                 <button key={project.id} type="button" className={`project-list-item ${selected?.id === project.id ? 'active' : ''}`} onClick={() => selectProject(project)}>
                   <div className="pli-title">{project.title}</div>
                   <div className="pli-team">{project.team_name}</div>
-                  {project.avg_score > 0 && <div className="pli-score">⭐ {Number(project.avg_score).toFixed(1)}</div>}
+                  {project.avg_score > 0 && <div className="pli-score"><Icon name="star" size={15} /> {Number(project.avg_score).toFixed(1)}</div>}
                 </button>
               ))}
             </div>
 
             <div className="score-panel">
               {!selected ? (
-                <div className="empty-state" style={{ height: '100%' }}><div className="empty-icon">👈</div><h3>Select a project to score</h3><p>Click a project to review its details.</p></div>
+                <div className="empty-state" style={{ height: '100%' }}><div className="empty-icon"><Icon name="arrowLeft" size={44} /></div><h3>Select a project to score</h3><p>Click a project to review its details.</p></div>
               ) : (
                 <div>
                   <div className="card" style={{ marginBottom: 20 }}>
                     <h2 className="project-title">{selected.title}</h2>
                     <p className="project-desc">{selected.description}</p>
-                    <a href={selected.github_link} target="_blank" rel="noopener noreferrer" className="project-link">🔗 View on GitHub</a>
+                    <a href={selected.github_link} target="_blank" rel="noopener noreferrer" className="project-link"><Icon name="link" size={16} /> View on GitHub</a>
                     <div className="team-meta" style={{ marginTop: 16 }}>
                       <div className="meta-item"><span className="meta-label">Team</span><span className="meta-value">{selected.team_name}</span></div>
                       <div className="meta-item"><span className="meta-label">Scores received</span><span className="meta-value">{selected.score_count || 0}</span></div>
@@ -168,7 +169,7 @@ export default function JudgePage() {
                           <label>Feedback (optional)</label>
                           <textarea placeholder="Share your thoughts on this project..." value={scoreForm.feedback} onChange={(event) => setScoreForm({ ...scoreForm, feedback: event.target.value })} rows={3} />
                         </div>
-                        <button type="submit" className="btn btn-primary" disabled={submitting}>{submitting ? 'Submitting...' : '⭐ Submit Score'}</button>
+                        <button type="submit" className="btn btn-primary" disabled={submitting}>{submitting ? 'Submitting...' : <><Icon name="star" size={16} /> Submit Score</>}</button>
                       </form>
                     </div>
                   )}

@@ -4,6 +4,7 @@ import Sidebar from '../components/Sidebar';
 import { useAuth } from '../context/AuthContext';
 import { adminAPI, hackathonAPI } from '../services/api';
 import HackathonPhaseBadge from '../components/HackathonPhaseBadge';
+import Icon from '../components/Icon';
 import './DashboardPage.css';
 
 export default function DashboardPage() {
@@ -38,7 +39,7 @@ export default function DashboardPage() {
       <Sidebar />
       <main className="main-content">
         <div className="page-header">
-          <h1>Welcome back, {user.name} 👋</h1>
+          <h1>Welcome back, {user.name}</h1>
           <p>Here's what's happening in your hackathon journey.</p>
         </div>
 
@@ -101,15 +102,15 @@ function ParticipantDashboard({ data }) {
         <h2>Quick Actions</h2>
         <div className="action-grid">
           <Link to="/hackathons" className="action-card">
-            <span className="action-icon">⚡</span>
+            <span className="action-icon"><Icon name="zap" size={25} /></span>
             <span>Browse Hackathons</span>
           </Link>
           <Link to="/leaderboard" className="action-card">
-            <span className="action-icon">🏆</span>
+            <span className="action-icon"><Icon name="trophy" size={25} /></span>
             <span>Leaderboard</span>
           </Link>
           <Link to="/profile" className="action-card">
-            <span className="action-icon">👤</span>
+            <span className="action-icon"><Icon name="user" size={25} /></span>
             <span>My Profile</span>
           </Link>
         </div>
@@ -146,15 +147,15 @@ function JudgeDashboard({ data }) {
         <h2>Quick Actions</h2>
         <div className="action-grid">
           <Link to="/judge" className="action-card">
-            <span className="action-icon">⚖️</span>
+            <span className="action-icon"><Icon name="scale" size={25} /></span>
             <span>Judge Projects</span>
           </Link>
           <Link to="/leaderboard" className="action-card">
-            <span className="action-icon">🏆</span>
+            <span className="action-icon"><Icon name="trophy" size={25} /></span>
             <span>Leaderboard</span>
           </Link>
           <Link to="/profile" className="action-card">
-            <span className="action-icon">👤</span>
+            <span className="action-icon"><Icon name="user" size={25} /></span>
             <span>My Profile</span>
           </Link>
         </div>
@@ -166,10 +167,10 @@ function JudgeDashboard({ data }) {
 function AdminDashboard({ data }) {
   const stats = data.stats || {};
   const statItems = [
-    { icon: '👤', label: 'Users', value: stats.users || 0, color: '#6c63ff' },
-    { icon: '👥', label: 'Teams', value: stats.teams || 0, color: '#ff6584' },
-    { icon: '🚀', label: 'Projects', value: stats.projects || 0, color: '#43e97b' },
-    { icon: '⭐', label: 'Scores', value: stats.scores || 0, color: '#f7971e' },
+    { icon: 'user', label: 'Users', value: stats.users || 0, color: '#6c63ff' },
+    { icon: 'users', label: 'Teams', value: stats.teams || 0, color: '#ff6584' },
+    { icon: 'rocket', label: 'Projects', value: stats.projects || 0, color: '#43e97b' },
+    { icon: 'award', label: 'Scores', value: stats.scores || 0, color: '#f7971e' },
   ];
 
   return (
@@ -177,7 +178,7 @@ function AdminDashboard({ data }) {
       <div className="admin-stats-grid">
         {statItems.map((s, i) => (
           <div className="admin-stat-card" key={i} style={{ '--accent-color': s.color }}>
-            <div className="admin-stat-icon">{s.icon}</div>
+            <div className="admin-stat-icon"><Icon name={s.icon} size={30} /></div>
             <div className="admin-stat-val">{s.value}</div>
             <div className="admin-stat-lbl">{s.label}</div>
           </div>
@@ -187,15 +188,15 @@ function AdminDashboard({ data }) {
         <h2>Quick Actions</h2>
         <div className="action-grid">
           <Link to="/admin" className="action-card">
-            <span className="action-icon">⚙️</span>
+            <span className="action-icon"><Icon name="settings" size={25} /></span>
             <span>Admin Panel</span>
           </Link>
           <Link to="/leaderboard" className="action-card">
-            <span className="action-icon">🏆</span>
+            <span className="action-icon"><Icon name="trophy" size={25} /></span>
             <span>Leaderboard</span>
           </Link>
           <Link to="/profile" className="action-card">
-            <span className="action-icon">👤</span>
+            <span className="action-icon"><Icon name="user" size={25} /></span>
             <span>My Profile</span>
           </Link>
         </div>

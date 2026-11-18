@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import HackathonPhaseBadge from '../components/HackathonPhaseBadge';
+import Icon from '../components/Icon';
 import { useAuth } from '../context/AuthContext';
 import { hackathonAPI } from '../services/api';
 import './HackathonsPage.css';
@@ -99,7 +100,7 @@ export default function HackathonsPage() {
                   {hackathon.banner_url ? (
                     <img className="hackathon-banner" src={hackathon.banner_url} alt="" />
                   ) : error ? null : (
-                    <div className="hackathon-banner-placeholder">⚡</div>
+                    <div className="hackathon-banner-placeholder"><Icon name="zap" size={40} /></div>
                   )}
                   <div className="hackathon-card-body">
                     <div className="hackathon-card-top">
@@ -109,8 +110,8 @@ export default function HackathonsPage() {
                     <h2>{hackathon.title}</h2>
                     <p className="hackathon-description">{hackathon.description}</p>
                     <div className="hackathon-card-meta">
-                      <span>👥 {hackathon.registration_count} registered</span>
-                      <span>🧩 {hackathon.team_count} teams</span>
+                      <span><Icon name="users" size={16} /> {hackathon.registration_count} registered</span>
+                      <span><Icon name="puzzle" size={16} /> {hackathon.team_count} teams</span>
                     </div>
                     <Link className="btn btn-primary btn-sm" to={`/hackathons/${encodeURIComponent(hackathon.slug)}`}>
                       View details
@@ -131,7 +132,7 @@ export default function HackathonsPage() {
           </>
         ) : (
           <div className="empty-state">
-            <div className="empty-icon">🧭</div>
+            <div className="empty-icon"><Icon name="compass" size={44} /></div>
             <h3>No hackathons found</h3>
             <p>Try changing the search or phase filter.</p>
           </div>

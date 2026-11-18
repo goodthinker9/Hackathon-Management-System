@@ -3,6 +3,7 @@ import Sidebar from '../components/Sidebar';
 import { useAuth } from '../context/AuthContext';
 import { profileAPI, API_ORIGIN } from '../services/api';
 import ValidationErrors from '../components/ValidationErrors';
+import Icon from '../components/Icon';
 import './ProfilePage.css';
 
 export default function ProfilePage() {
@@ -122,7 +123,7 @@ export default function ProfilePage() {
       <Sidebar />
       <main className="main-content">
         <div className="page-header">
-          <h1>👤 My Profile</h1>
+          <h1><Icon name="user" size={29} /> My Profile</h1>
           <p>Manage your account information and security settings.</p>
         </div>
 
@@ -160,7 +161,7 @@ export default function ProfilePage() {
               onClick={() => fileInputRef.current.click()}
               disabled={uploadingAvatar}
             >
-              {uploadingAvatar ? '⏳ Uploading...' : '📷 Change Photo'}
+              {uploadingAvatar ? <><Icon name="hourglass" size={17} /> Uploading...</> : <><Icon name="camera" size={17} /> Change Photo</>}
             </button>
 
             {avatarMsg.text && (
@@ -185,7 +186,7 @@ export default function ProfilePage() {
           <div className="profile-forms">
             {/* Update profile */}
             <div className="card">
-              <h3 className="card-title">✏️ Edit Profile</h3>
+              <h3 className="card-title"><Icon name="pencil" size={18} /> Edit Profile</h3>
               {profileMsg.text && (
                 <div className={`alert alert-${profileMsg.type}`}>{profileMsg.text}</div>
               )}
@@ -227,14 +228,14 @@ export default function ProfilePage() {
                   </small>
                 </div>
                 <button type="submit" className="btn btn-primary" disabled={savingProfile}>
-                  {savingProfile ? '⏳ Saving...' : '💾 Save Changes'}
+                  {savingProfile ? <><Icon name="hourglass" size={17} /> Saving...</> : <><Icon name="save" size={17} /> Save Changes</>}
                 </button>
               </form>
             </div>
 
             {/* Change password */}
             <div className="card">
-              <h3 className="card-title">🔐 Change Password</h3>
+              <h3 className="card-title"><Icon name="lock" size={18} /> Change Password</h3>
               {passwordMsg.text && (
                 <div className={`alert alert-${passwordMsg.type}`}>{passwordMsg.text}</div>
               )}
@@ -289,7 +290,7 @@ export default function ProfilePage() {
                 )}
 
                 <button type="submit" className="btn btn-primary" disabled={savingPassword}>
-                  {savingPassword ? '⏳ Updating...' : '🔐 Update Password'}
+                  {savingPassword ? <><Icon name="hourglass" size={17} /> Updating...</> : <><Icon name="lock" size={17} /> Update Password</>}
                 </button>
               </form>
             </div>

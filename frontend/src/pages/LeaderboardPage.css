@@ -43,12 +43,27 @@
 }
 
 .podium-crown {
-  font-size: 24px;
+  display: inline-flex;
+  color: #e6bf55;
   animation: float 3s ease-in-out infinite;
 }
 
 .podium-medal {
-  font-size: 32px;
+  display: inline-flex;
+}
+
+.podium-medal.gold,
+.rank-medal-1 { color: #e6bf55; }
+
+.podium-medal.silver,
+.rank-medal-2 { color: #bdc5d1; }
+
+.podium-medal.bronze,
+.rank-medal-3 { color: #c88958; }
+
+.rank-medal {
+  display: inline-flex;
+  align-items: center;
 }
 
 .podium-name {

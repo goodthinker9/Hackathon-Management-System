@@ -56,6 +56,12 @@ button {
   font-family: inherit;
 }
 
+.app-icon {
+  display: inline-block;
+  flex-shrink: 0;
+  vertical-align: middle;
+}
+
 input, textarea, select {
   font-family: inherit;
 }

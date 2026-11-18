@@ -1,41 +1,42 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import Navbar from '../components/Navbar';
+import Icon from '../components/Icon';
 import './HomePage.css';
 
 const features = [
   {
-    icon: '🔐',
+    icon: 'shield',
     title: 'Secure Authentication',
     desc: 'JWT-based auth with role management for admins, judges, and participants.',
     gradient: 'linear-gradient(135deg, #6c63ff, #8b85ff)',
   },
   {
-    icon: '👥',
+    icon: 'users',
     title: 'Team Management',
     desc: 'Create or join teams with unique invite codes. Collaborate seamlessly.',
     gradient: 'linear-gradient(135deg, #ff6584, #ff8fa3)',
   },
   {
-    icon: '🚀',
+    icon: 'rocket',
     title: 'Project Submission',
     desc: 'Submit your project with title, description, and GitHub repository link.',
     gradient: 'linear-gradient(135deg, #43e97b, #38f9d7)',
   },
   {
-    icon: '⚖️',
+    icon: 'scale',
     title: 'Judge Scoring',
     desc: 'Judges score projects 1–10 with feedback. Duplicate scoring is prevented.',
     gradient: 'linear-gradient(135deg, #f7971e, #ffd200)',
   },
   {
-    icon: '🏆',
+    icon: 'trophy',
     title: 'Live Leaderboard',
     desc: 'Real-time rankings based on average scores from all judges.',
     gradient: 'linear-gradient(135deg, #a18cd1, #fbc2eb)',
   },
   {
-    icon: '⚙️',
+    icon: 'settings',
     title: 'Admin Dashboard',
     desc: 'Full control over users, teams, projects, and scores in one place.',
     gradient: 'linear-gradient(135deg, #4facfe, #00f2fe)',
@@ -43,10 +44,10 @@ const features = [
 ];
 
 const steps = [
-  { num: '01', icon: '📝', title: 'Register', desc: 'Create your account and join the hackathon as a participant.' },
-  { num: '02', icon: '👥', title: 'Build a Team', desc: 'Create a team or join one using an invite code from your teammates.' },
-  { num: '03', icon: '💻', title: 'Submit Project', desc: 'Build something amazing and submit your project with a GitHub link.' },
-  { num: '04', icon: '🏆', title: 'Get Scored', desc: 'Judges review and score your project. Climb the leaderboard!' },
+  { num: '01', icon: 'clipboard', title: 'Register', desc: 'Create your account and join the hackathon as a participant.' },
+  { num: '02', icon: 'users', title: 'Build a Team', desc: 'Create a team or join one using an invite code from your teammates.' },
+  { num: '03', icon: 'laptop', title: 'Submit Project', desc: 'Build something amazing and submit your project with a GitHub link.' },
+  { num: '04', icon: 'award', title: 'Get Scored', desc: 'Judges review and score your project. Climb the leaderboard!' },
 ];
 
 export default function HomePage() {
@@ -82,10 +83,10 @@ export default function HomePage() {
 
           <div className="hero-actions">
             <Link to="/register" className="btn btn-primary btn-lg">
-              🚀 Get Started Free
+              <Icon name="rocket" size={19} /> Get Started Free
             </Link>
             <Link to="/hackathons" className="btn btn-outline btn-lg">
-              ⚡ Explore Hackathons
+              <Icon name="zap" size={19} /> Explore Hackathons
             </Link>
           </div>
 
@@ -115,21 +116,21 @@ export default function HomePage() {
         {/* Floating cards */}
         <div className="hero-visual">
           <div className="floating-card card-1">
-            <span className="fc-icon">🏆</span>
+            <span className="fc-icon"><Icon name="trophy" size={28} /></span>
             <div>
               <div className="fc-title">Team Alpha</div>
               <div className="fc-sub">Score: 9.4 / 10</div>
             </div>
           </div>
           <div className="floating-card card-2">
-            <span className="fc-icon">🚀</span>
+            <span className="fc-icon"><Icon name="rocket" size={28} /></span>
             <div>
               <div className="fc-title">Project Submitted!</div>
               <div className="fc-sub">AI Health Monitor</div>
             </div>
           </div>
           <div className="floating-card card-3">
-            <span className="fc-icon">⚡</span>
+            <span className="fc-icon"><Icon name="zap" size={28} /></span>
             <div>
               <div className="fc-title">New Score</div>
               <div className="fc-sub">Judge gave 10/10</div>
@@ -153,7 +154,7 @@ export default function HomePage() {
             {features.map((f, i) => (
               <div className="feature-card" key={i} style={{ animationDelay: `${i * 0.1}s` }}>
                 <div className="feature-icon" style={{ background: f.gradient }}>
-                  {f.icon}
+                  <Icon name={f.icon} size={29} />
                 </div>
                 <h3 className="feature-title">{f.title}</h3>
                 <p className="feature-desc">{f.desc}</p>
@@ -179,11 +180,11 @@ export default function HomePage() {
               <React.Fragment key={i}>
                 <div className="step-card">
                   <div className="step-number">{step.num}</div>
-                  <div className="step-icon">{step.icon}</div>
+                  <div className="step-icon"><Icon name={step.icon} size={40} /></div>
                   <h3 className="step-title">{step.title}</h3>
                   <p className="step-desc">{step.desc}</p>
                 </div>
-                {i < steps.length - 1 && <div className="step-arrow">→</div>}
+                {i < steps.length - 1 && <div className="step-arrow"><Icon name="chevronRight" size={27} /></div>}
               </React.Fragment>
             ))}
           </div>
@@ -201,7 +202,7 @@ export default function HomePage() {
             </p>
             <div className="cta-actions">
               <Link to="/register" className="btn btn-primary btn-lg">
-                🚀 Register Now
+                <Icon name="rocket" size={19} /> Register Now
               </Link>
               <Link to="/login" className="btn btn-outline btn-lg">
                 Login to Dashboard
@@ -216,7 +217,7 @@ export default function HomePage() {
         <div className="container">
           <div className="footer-content">
             <div className="footer-brand">
-              <span className="brand-icon">⚡</span>
+              <span className="brand-icon"><Icon name="zap" size={24} /></span>
               <span className="brand-text">HackHub</span>
               <p className="footer-tagline">The modern hackathon management platform.</p>
             </div>
@@ -243,7 +244,7 @@ export default function HomePage() {
           </div>
 
           <div className="footer-bottom">
-            <p>© 2024 HackHub. Built with ❤️ for hackers everywhere.</p>
+            <p>© 2024 HackHub. Built for hackathons everywhere.</p>
           </div>
         </div>
       </footer>

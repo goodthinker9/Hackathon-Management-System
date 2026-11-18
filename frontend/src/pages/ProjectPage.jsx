@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
+import Icon from '../components/Icon';
 import { hackathonAPI, projectAPI, scoreAPI } from '../services/api';
 import ValidationErrors from '../components/ValidationErrors';
 import './InnerPage.css';
@@ -89,8 +90,8 @@ export default function ProjectPage() {
       <Sidebar />
       <main className="main-content">
         <div className="page-header">
-          <Link className="back-link" to={`/hackathons/${encodeURIComponent(slug)}`}>← {hackathon?.title || 'Hackathon'}</Link>
-          <h1>🚀 My Project</h1>
+          <Link className="back-link" to={`/hackathons/${encodeURIComponent(slug)}`}><Icon name="arrowLeft" size={16} /> {hackathon?.title || 'Hackathon'}</Link>
+          <h1><Icon name="rocket" size={30} /> My Project</h1>
           <p>Submit and track your project for this hackathon.</p>
         </div>
         {loading ? (
@@ -104,7 +105,7 @@ export default function ProjectPage() {
             <div className="card project-detail">
               <h2 className="project-title">{project.title}</h2>
               <p className="project-desc">{project.description}</p>
-              <a href={project.github_link} target="_blank" rel="noopener noreferrer" className="project-link">🔗 View on GitHub</a>
+              <a href={project.github_link} target="_blank" rel="noopener noreferrer" className="project-link"><Icon name="link" size={16} /> View on GitHub</a>
               <div className="team-meta" style={{ marginTop: 20 }}>
                 <div className="meta-item"><span className="meta-label">Team</span><span className="meta-value">{project.team_name}</span></div>
                 <div className="meta-item"><span className="meta-label">Submitted by</span><span className="meta-value">{project.submitter_name}</span></div>
@@ -114,7 +115,7 @@ export default function ProjectPage() {
             <div className="card">
               <h3 className="card-title">Scores {average && <span className="score-badge">{average}/10</span>}</h3>
               {!scores.length ? (
-                <div className="empty-state"><div className="empty-icon">⏳</div><h3>No scores yet</h3><p>Judges have not scored your project yet.</p></div>
+                <div className="empty-state"><div className="empty-icon"><Icon name="hourglass" size={44} /></div><h3>No scores yet</h3><p>Judges have not scored your project yet.</p></div>
               ) : (
                 <div className="members-list">
                   {scores.map((score) => (
@@ -135,7 +136,7 @@ export default function ProjectPage() {
             <ValidationErrors errors={validationErrors} />
             {!canSubmit && !project ? (
               <div className="empty-state card">
-                <div className="empty-icon">⏳</div>
+                <div className="empty-icon"><Icon name="hourglass" size={44} /></div>
                 <h3>{emptyMessage || 'Project submissions are closed'}</h3>
                 {hackathon && hackathon.phase === 'upcoming' && <p>Submissions open on {new Date(hackathon.starts_at).toLocaleString()}.</p>}
                 <Link className="btn btn-secondary" to={`/hackathons/${encodeURIComponent(slug)}/team`}>View team</Link>
@@ -157,7 +158,7 @@ export default function ProjectPage() {
                     <label>GitHub Repository Link *</label>
                     <input type="url" placeholder="https://github.com/username/repo" value={form.github_link} onChange={(event) => setForm({ ...form, github_link: event.target.value })} required />
                   </div>
-                  <button type="submit" className="btn btn-primary" disabled={submitting}>{submitting ? 'Saving...' : project ? 'Save changes' : '🚀 Submit Project'}</button>
+                  <button type="submit" className="btn btn-primary" disabled={submitting}>{submitting ? 'Saving...' : project ? <><Icon name="save" size={16} /> Save changes</> : <><Icon name="rocket" size={16} /> Submit Project</>}</button>
                   {project && <button type="button" className="btn btn-secondary" style={{ marginLeft: 10 }} onClick={() => setEditing(false)}>Cancel</button>}
                 </form>
               </div>

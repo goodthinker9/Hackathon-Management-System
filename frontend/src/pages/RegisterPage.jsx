@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import ValidationErrors from '../components/ValidationErrors';
+import Icon from '../components/Icon';
 import './AuthPage.css';
 
 export default function RegisterPage() {
@@ -49,7 +50,7 @@ export default function RegisterPage() {
         <div className="auth-card">
           <div className="auth-header">
             <Link to="/" className="auth-logo">
-              <span>⚡</span> HackHub
+              <Icon name="zap" size={22} /> HackHub
             </Link>
             <h1>Create Account</h1>
             <p>Join the hackathon as a participant</p>
@@ -105,7 +106,7 @@ export default function RegisterPage() {
             </div>
 
             <button type="submit" className="btn btn-primary" style={{ width: '100%' }} disabled={loading}>
-              {loading ? 'Creating account...' : '🚀 Create Account'}
+              {loading ? 'Creating account...' : <><Icon name="userPlus" size={18} /> Create Account</>}
             </button>
           </form>
 

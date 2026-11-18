@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import ValidationErrors from '../components/ValidationErrors';
+import Icon from '../components/Icon';
 import './AuthPage.css';
 
 export default function LoginPage() {
@@ -41,7 +42,7 @@ export default function LoginPage() {
         <div className="auth-card">
           <div className="auth-header">
             <Link to="/" className="auth-logo">
-              <span>⚡</span> HackHub
+              <Icon name="zap" size={22} /> HackHub
             </Link>
             <h1>Welcome back</h1>
             <p>Sign in to your account to continue</p>
@@ -77,7 +78,7 @@ export default function LoginPage() {
             </div>
 
             <button type="submit" className="btn btn-primary" style={{ width: '100%' }} disabled={loading}>
-              {loading ? 'Signing in...' : '🔐 Sign In'}
+              {loading ? 'Signing in...' : <><Icon name="lock" size={18} /> Sign In</>}
             </button>
           </form>
 

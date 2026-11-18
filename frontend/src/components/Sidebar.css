@@ -25,6 +25,8 @@
 }
 
 .sidebar-brand .brand-icon {
+  display: inline-flex;
+  align-items: center;
   font-size: 22px;
   filter: drop-shadow(0 0 8px rgba(108, 99, 255, 0.8));
 }
@@ -110,8 +112,10 @@
 }
 
 .link-icon {
-  font-size: 18px;
   width: 24px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   text-align: center;
 }
 

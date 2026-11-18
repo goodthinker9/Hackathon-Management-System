@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
+import Icon from '../components/Icon';
 import { hackathonAPI, teamAPI } from '../services/api';
 import ValidationErrors from '../components/ValidationErrors';
 import './InnerPage.css';
@@ -65,8 +66,8 @@ export default function TeamPage() {
       <Sidebar />
       <main className="main-content">
         <div className="page-header">
-          <Link className="back-link" to={`/hackathons/${encodeURIComponent(slug)}`}>← {hackathon?.title || 'Hackathon'}</Link>
-          <h1>👥 Team Management</h1>
+          <Link className="back-link" to={`/hackathons/${encodeURIComponent(slug)}`}><Icon name="arrowLeft" size={16} /> {hackathon?.title || 'Hackathon'}</Link>
+          <h1><Icon name="users" size={30} /> Team Management</h1>
           <p>Create a team or join one for this hackathon.</p>
         </div>
         {loading ? (
@@ -78,7 +79,7 @@ export default function TeamPage() {
         ) : !hackathon?.is_registered ? (
           <div className="inner-content fade-in">
             <div className="empty-state card">
-              <div className="empty-icon">📝</div>
+              <div className="empty-icon"><Icon name="clipboard" size={44} /></div>
               <h3>Register for this hackathon first</h3>
               <p>Team creation and joining are available to registered participants.</p>
               <Link className="btn btn-primary" to={`/hackathons/${encodeURIComponent(slug)}`}>Go to registration</Link>
@@ -87,7 +88,7 @@ export default function TeamPage() {
         ) : submissionClosed ? (
           <div className="inner-content fade-in">
             <div className="empty-state card">
-              <div className="empty-icon">⏳</div>
+              <div className="empty-icon"><Icon name="hourglass" size={44} /></div>
               <h3>Team changes are closed</h3>
               <p>The team deadline was {new Date(hackathon.submission_deadline).toLocaleString()}.</p>
             </div>
@@ -95,8 +96,8 @@ export default function TeamPage() {
         ) : (
           <div className="inner-content fade-in">
             <div className="tab-switcher">
-              <button className={`tab-btn ${view === 'create' ? 'active' : ''}`} onClick={() => setView('create')}>✨ Create Team</button>
-              <button className={`tab-btn ${view === 'join' ? 'active' : ''}`} onClick={() => setView('join')}>🔗 Join Team</button>
+              <button className={`tab-btn ${view === 'create' ? 'active' : ''}`} onClick={() => setView('create')}><Icon name="users" size={16} /> Create Team</button>
+              <button className={`tab-btn ${view === 'join' ? 'active' : ''}`} onClick={() => setView('join')}><Icon name="key" size={16} /> Join Team</button>
             </div>
             {error && <div className="alert alert-error">{error}</div>}
             <ValidationErrors errors={validationErrors} />
@@ -114,7 +115,7 @@ export default function TeamPage() {
                     <label>Description</label>
                     <textarea placeholder="What is your team about?" value={form.description} onChange={(event) => setForm({ ...form, description: event.target.value })} rows={3} />
                   </div>
-                  <button type="submit" className="btn btn-primary" disabled={submitting}>{submitting ? 'Creating...' : '✨ Create Team'}</button>
+                  <button type="submit" className="btn btn-primary" disabled={submitting}>{submitting ? 'Creating...' : <><Icon name="users" size={16} /> Create Team</>}</button>
                 </form>
               </div>
             ) : (
@@ -125,7 +126,7 @@ export default function TeamPage() {
                     <label>Invite Code *</label>
                     <input type="text" placeholder="e.g. A1B2C3D4" value={form.invite_code} onChange={(event) => setForm({ ...form, invite_code: event.target.value.toUpperCase() })} required style={{ textTransform: 'uppercase', letterSpacing: '2px' }} />
                   </div>
-                  <button type="submit" className="btn btn-primary" disabled={submitting}>{submitting ? 'Joining...' : '🔗 Join Team'}</button>
+                  <button type="submit" className="btn btn-primary" disabled={submitting}>{submitting ? 'Joining...' : <><Icon name="key" size={16} /> Join Team</>}</button>
                 </form>
               </div>
             )}

@@ -1,28 +1,29 @@
 import React from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import Icon from './Icon';
 import './Sidebar.css';
 
 const navItems = {
   participant: [
-    { path: '/dashboard', icon: '🏠', label: 'Dashboard' },
-    { path: '/hackathons', icon: '⚡', label: 'Hackathons' },
-    { path: '/leaderboard', icon: '🏆', label: 'Leaderboard' },
-    { path: '/profile', icon: '👤', label: 'My Profile' },
+    { path: '/dashboard', icon: 'home', label: 'Dashboard' },
+    { path: '/hackathons', icon: 'zap', label: 'Hackathons' },
+    { path: '/leaderboard', icon: 'trophy', label: 'Leaderboard' },
+    { path: '/profile', icon: 'user', label: 'My Profile' },
   ],
   judge: [
-    { path: '/dashboard', icon: '🏠', label: 'Dashboard' },
-    { path: '/hackathons', icon: '⚡', label: 'Hackathons' },
-    { path: '/judge', icon: '⚖️', label: 'Judge Panel' },
-    { path: '/leaderboard', icon: '🏆', label: 'Leaderboard' },
-    { path: '/profile', icon: '👤', label: 'My Profile' },
+    { path: '/dashboard', icon: 'home', label: 'Dashboard' },
+    { path: '/hackathons', icon: 'zap', label: 'Hackathons' },
+    { path: '/judge', icon: 'scale', label: 'Judge Panel' },
+    { path: '/leaderboard', icon: 'trophy', label: 'Leaderboard' },
+    { path: '/profile', icon: 'user', label: 'My Profile' },
   ],
   admin: [
-    { path: '/dashboard', icon: '🏠', label: 'Dashboard' },
-    { path: '/hackathons', icon: '⚡', label: 'Hackathons' },
-    { path: '/admin', icon: '⚙️', label: 'Admin Panel' },
-    { path: '/leaderboard', icon: '🏆', label: 'Leaderboard' },
-    { path: '/profile', icon: '👤', label: 'My Profile' },
+    { path: '/dashboard', icon: 'home', label: 'Dashboard' },
+    { path: '/hackathons', icon: 'zap', label: 'Hackathons' },
+    { path: '/admin', icon: 'settings', label: 'Admin Panel' },
+    { path: '/leaderboard', icon: 'trophy', label: 'Leaderboard' },
+    { path: '/profile', icon: 'user', label: 'My Profile' },
   ],
 };
 
@@ -47,7 +48,7 @@ export default function Sidebar() {
     <aside className="sidebar">
       <div className="sidebar-brand">
         <Link to="/">
-          <span className="brand-icon">⚡</span>
+          <span className="brand-icon"><Icon name="zap" size={22} /></span>
           <span className="brand-text">HackHub</span>
         </Link>
       </div>
@@ -73,7 +74,7 @@ export default function Sidebar() {
             to={item.path}
             className={`sidebar-link ${location.pathname === item.path || (item.path === '/hackathons' && location.pathname.startsWith('/hackathons')) ? 'active' : ''}`}
           >
-            <span className="link-icon">{item.icon}</span>
+            <span className="link-icon"><Icon name={item.icon} size={19} /></span>
             <span className="link-label">{item.label}</span>
           </Link>
         ))}
@@ -81,7 +82,7 @@ export default function Sidebar() {
 
       <div className="sidebar-footer">
         <button className="sidebar-logout" onClick={handleLogout}>
-          <span>🚪</span> Logout
+          <Icon name="logOut" size={18} /> Logout
         </button>
       </div>
     </aside>

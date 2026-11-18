@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import HackathonPhaseBadge from '../components/HackathonPhaseBadge';
+import Icon from '../components/Icon';
 import { useAuth } from '../context/AuthContext';
 import { hackathonAPI, leaderboardAPI, projectAPI, teamAPI } from '../services/api';
 import './HackathonsPage.css';
@@ -134,7 +135,7 @@ export default function HackathonDetailPage() {
           <div className="empty-state"><h3>{error}</h3><Link to="/hackathons" className="btn btn-primary">Browse hackathons</Link></div>
         ) : hackathon ? (
           <>
-            <Link to="/hackathons" className="back-link">← All hackathons</Link>
+            <Link to="/hackathons" className="back-link"><Icon name="arrowLeft" size={16} /> All hackathons</Link>
             <header className="hackathon-detail-header">
               {hackathon.banner_url && <img className="hackathon-detail-banner" src={hackathon.banner_url} alt="" />}
               <div className="hackathon-detail-title">
@@ -142,9 +143,9 @@ export default function HackathonDetailPage() {
                 <h1>{hackathon.title}</h1>
                 <p>{hackathon.description}</p>
                 <div className="hackathon-card-meta">
-                  <span>👥 {hackathon.registration_count} registered</span>
-                  <span>🧩 {hackathon.team_count} teams</span>
-                  <span>📅 Starts {dateTime(hackathon.starts_at)}</span>
+                  <span><Icon name="users" size={16} /> {hackathon.registration_count} registered</span>
+                  <span><Icon name="puzzle" size={16} /> {hackathon.team_count} teams</span>
+                  <span><Icon name="calendar" size={16} /> Starts {dateTime(hackathon.starts_at)}</span>
                 </div>
                 {participant && (
                   <div className="detail-actions">
@@ -203,11 +204,11 @@ export default function HackathonDetailPage() {
               ) : tabData.length ? (
                 <div className="card">
                   {tab === 'Teams' && <div className="listing-grid">{tabData.map((item) => <article className="listing-card" key={item.id}><h3>{item.name}</h3><p>{item.description || 'No team description.'}</p><small>{item.member_count} members · led by {item.owner_name}</small></article>)}</div>}
-                  {tab === 'Projects' && <div className="listing-grid">{tabData.map((item) => <article className="listing-card" key={item.id}><h3>{item.title}</h3><p>{item.description}</p><a href={item.github_link} target="_blank" rel="noopener noreferrer">View on GitHub ↗</a></article>)}</div>}
+                  {tab === 'Projects' && <div className="listing-grid">{tabData.map((item) => <article className="listing-card" key={item.id}><h3>{item.title}</h3><p>{item.description}</p>                  <a href={item.github_link} target="_blank" rel="noopener noreferrer">View on GitHub <Icon name="externalLink" size={15} /></a></article>)}</div>}
                   {tab === 'Leaderboard' && <div className="table-wrapper"><table><thead><tr><th>Rank</th><th>Project</th><th>Team</th><th>Average</th><th>Judges</th></tr></thead><tbody>{tabData.map((item, index) => <tr key={item.id}><td>{index + 1}</td><td>{item.title}</td><td>{item.team_name}</td><td>{item.avg_score == null ? '—' : `${item.avg_score}/10`}</td><td>{item.judge_count}</td></tr>)}</tbody></table></div>}
                 </div>
               ) : (
-                <div className="empty-state"><div className="empty-icon">{tab === 'Teams' ? '👥' : tab === 'Projects' ? '🚀' : '🏆'}</div><h3>No {tab.toLowerCase()} to show yet</h3>{tab === 'Projects' && hackathon.phase !== 'hacking' && <p>Submissions open on {dateTime(hackathon.starts_at)}.</p>}</div>
+                <div className="empty-state"><div className="empty-icon"><Icon name={tab === 'Teams' ? 'users' : tab === 'Projects' ? 'rocket' : 'trophy'} size={44} /></div><h3>No {tab.toLowerCase()} to show yet</h3>{tab === 'Projects' && hackathon.phase !== 'hacking' && <p>Submissions open on {dateTime(hackathon.starts_at)}.</p>}</div>
               )}
             </section>
           </>

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import Icon from './Icon';
 import './Navbar.css';
 
 export default function Navbar() {
@@ -20,7 +21,7 @@ export default function Navbar() {
     <nav className="navbar">
       <div className="navbar-container">
         <Link to="/" className="navbar-brand">
-          <span className="brand-icon">⚡</span>
+          <span className="brand-icon"><Icon name="zap" size={22} /></span>
           <span className="brand-text">HackHub</span>
         </Link>
 
@@ -30,10 +31,10 @@ export default function Navbar() {
 
         <div className={`navbar-links ${menuOpen ? 'open' : ''}`}>
           <Link to="/leaderboard" className={`nav-link ${isActive('/leaderboard') ? 'active' : ''}`}>
-            🏆 Leaderboard
+            <Icon name="trophy" size={17} /> Leaderboard
           </Link>
           <Link to="/hackathons" className={`nav-link ${location.pathname.startsWith('/hackathons') ? 'active' : ''}`}>
-            ⚡ Hackathons
+            <Icon name="zap" size={17} /> Hackathons
           </Link>
 
           {user ? (
