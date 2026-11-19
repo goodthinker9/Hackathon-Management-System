@@ -10,7 +10,6 @@ import RegisterPage from './pages/RegisterPage';
 import DashboardPage from './pages/DashboardPage';
 import TeamPage from './pages/TeamPage';
 import ProjectPage from './pages/ProjectPage';
-import LeaderboardPage from './pages/LeaderboardPage';
 import JudgePage from './pages/JudgePage';
 import AdminPage from './pages/AdminPage';
 import ProfilePage from './pages/ProfilePage';
@@ -40,8 +39,6 @@ function AppRoutes() {
       <Route path="/register" element={<PublicRoute><RegisterPage /></PublicRoute>} />
       <Route path="/hackathons" element={<HackathonsPage />} />
       <Route path="/hackathons/:slug" element={<HackathonDetailPage />} />
-      <Route path="/leaderboard" element={<LeaderboardPage />} />
-
       <Route path="/dashboard" element={
         <ProtectedRoute><DashboardPage /></ProtectedRoute>
       } />

@@ -49,18 +49,24 @@ async function migrate() {
     const [applied] = await db.query('SELECT version FROM schema_migrations WHERE version = ?', [file]);
     if (applied.length) continue;
 
-    await validateLegacyData(file);
-    const sql = fs.readFileSync(path.join(migrationDir, file), 'utf8');
-    const statements = sql.split(/;\s*(?:\r?\n|$)/).map((statement) => statement.trim()).filter(Boolean);
-    for (const statement of statements) await db.query(statement);
-    await db.query('INSERT INTO schema_migrations (version) VALUES (?)', [file]);
-    console.log(`Applied migration ${file}`);
+    try {
+      await validateLegacyData(file);
+      const sql = fs.readFileSync(path.join(migrationDir, file), 'utf8');
+      const statements = sql.split(/;\s*(?:\r?\n|$)/).map((statement) => statement.trim()).filter(Boolean);
+      for (const statement of statements) await db.query(statement);
+      await db.query('INSERT INTO schema_migrations (version) VALUES (?)', [file]);
+      console.log(`Applied migration ${file}`);
+    } catch (error) {
+      console.error(`Migration failed on file ${file}:`, error);
+      throw error;
+    }
   }
 }
 
 migrate()
   .catch((error) => {
     console.error('Migration failed:', error);
+    console.error('MySQL DDL is not transactional. Restore the database from backup before retrying.');
     process.exitCode = 1;
   })
   .finally(() => db.end());

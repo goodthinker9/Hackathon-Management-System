@@ -8,16 +8,16 @@ const UserModel = {
 
   async findById(id) {
     const [rows] = await db.query(
-      'SELECT id, name, email, role, bio, avatar, created_at FROM users WHERE id = ?',
+      'SELECT id, name, email, role, bio, avatar, skills, github_url, created_at FROM users WHERE id = ?',
       [id]
     );
     return rows[0];
   },
 
-  async updateProfile(id, { name, bio }) {
+  async updateProfile(id, { name, bio, skills, github_url }) {
     const [result] = await db.query(
-      'UPDATE users SET name = ?, bio = ? WHERE id = ?',
-      [name, bio || null, id]
+      'UPDATE users SET name = ?, bio = ?, skills = ?, github_url = ? WHERE id = ?',
+      [name, bio || null, skills || null, github_url || null, id]
     );
     return result.affectedRows;
   },
@@ -48,7 +48,7 @@ const UserModel = {
 
   async getAll() {
     const [rows] = await db.query(
-      'SELECT id, name, email, role, bio, avatar, created_at FROM users ORDER BY created_at DESC'
+      'SELECT id, name, email, role, bio, avatar, skills, github_url, created_at FROM users ORDER BY created_at DESC'
     );
     return rows;
   },

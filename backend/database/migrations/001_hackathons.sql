@@ -46,7 +46,12 @@ SELECT
   '2020-01-01 00:00:00', '2020-01-05 00:00:00', '2020-01-05 00:00:00',
   '2020-01-06 00:00:00', '2020-01-10 00:00:00', '2020-01-10 00:00:00',
   4, 1, (SELECT MIN(id) FROM users WHERE role = 'admin')
-WHERE NOT EXISTS (SELECT 1 FROM hackathons WHERE slug = 'legacy-hackathon');
+WHERE NOT EXISTS (SELECT 1 FROM hackathons WHERE slug = 'legacy-hackathon')
+  AND (
+    EXISTS (SELECT 1 FROM teams)
+    OR EXISTS (SELECT 1 FROM team_members)
+    OR EXISTS (SELECT 1 FROM projects)
+  );
 
 UPDATE teams
 SET hackathon_id = (SELECT id FROM hackathons WHERE slug = 'legacy-hackathon')

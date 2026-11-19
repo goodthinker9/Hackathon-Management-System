@@ -52,9 +52,12 @@ const TeamModel = {
     return rows[0];
   },
 
-  async getMembers(teamId) {
+  async getMembers(teamId, requesterId, requesterRole) {
+    const includeEmail = requesterRole === 'admin'
+      || (requesterId != null && await this.isMember(teamId, requesterId));
+    const emailColumn = includeEmail ? ', u.email' : '';
     const [rows] = await db.query(
-      `SELECT u.id, u.name, u.email, u.role, tm.joined_at
+      `SELECT u.id, u.name${emailColumn}, u.role, tm.joined_at
        FROM team_members tm
        JOIN users u ON tm.user_id = u.id
        WHERE tm.team_id = ?

@@ -92,7 +92,6 @@ export const scoreAPI = {
 export const leaderboardAPI = {
   getForHackathon: (hackathonId) =>
     api.get(`/hackathons/${encodeURIComponent(hackathonId)}/leaderboard`),
-  get: () => api.get('/leaderboard'),
 };
 
 // Hackathons

@@ -105,10 +105,6 @@ function ParticipantDashboard({ data }) {
             <span className="action-icon"><Icon name="zap" size={25} /></span>
             <span>Browse Hackathons</span>
           </Link>
-          <Link to="/leaderboard" className="action-card">
-            <span className="action-icon"><Icon name="trophy" size={25} /></span>
-            <span>Leaderboard</span>
-          </Link>
           <Link to="/profile" className="action-card">
             <span className="action-icon"><Icon name="user" size={25} /></span>
             <span>My Profile</span>
@@ -150,10 +146,6 @@ function JudgeDashboard({ data }) {
             <span className="action-icon"><Icon name="scale" size={25} /></span>
             <span>Judge Projects</span>
           </Link>
-          <Link to="/leaderboard" className="action-card">
-            <span className="action-icon"><Icon name="trophy" size={25} /></span>
-            <span>Leaderboard</span>
-          </Link>
           <Link to="/profile" className="action-card">
             <span className="action-icon"><Icon name="user" size={25} /></span>
             <span>My Profile</span>
@@ -190,10 +182,6 @@ function AdminDashboard({ data }) {
           <Link to="/admin" className="action-card">
             <span className="action-icon"><Icon name="settings" size={25} /></span>
             <span>Admin Panel</span>
-          </Link>
-          <Link to="/leaderboard" className="action-card">
-            <span className="action-icon"><Icon name="trophy" size={25} /></span>
-            <span>Leaderboard</span>
           </Link>
           <Link to="/profile" className="action-card">
             <span className="action-icon"><Icon name="user" size={25} /></span>

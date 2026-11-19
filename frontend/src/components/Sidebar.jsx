@@ -8,21 +8,18 @@ const navItems = {
   participant: [
     { path: '/dashboard', icon: 'home', label: 'Dashboard' },
     { path: '/hackathons', icon: 'zap', label: 'Hackathons' },
-    { path: '/leaderboard', icon: 'trophy', label: 'Leaderboard' },
     { path: '/profile', icon: 'user', label: 'My Profile' },
   ],
   judge: [
     { path: '/dashboard', icon: 'home', label: 'Dashboard' },
     { path: '/hackathons', icon: 'zap', label: 'Hackathons' },
     { path: '/judge', icon: 'scale', label: 'Judge Panel' },
-    { path: '/leaderboard', icon: 'trophy', label: 'Leaderboard' },
     { path: '/profile', icon: 'user', label: 'My Profile' },
   ],
   admin: [
     { path: '/dashboard', icon: 'home', label: 'Dashboard' },
     { path: '/hackathons', icon: 'zap', label: 'Hackathons' },
     { path: '/admin', icon: 'settings', label: 'Admin Panel' },
-    { path: '/leaderboard', icon: 'trophy', label: 'Leaderboard' },
     { path: '/profile', icon: 'user', label: 'My Profile' },
   ],
 };

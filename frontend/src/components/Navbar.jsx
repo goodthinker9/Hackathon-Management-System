@@ -15,8 +15,6 @@ export default function Navbar() {
     navigate('/');
   };
 
-  const isActive = (path) => location.pathname === path;
-
   return (
     <nav className="navbar">
       <div className="navbar-container">
@@ -30,26 +28,23 @@ export default function Navbar() {
         </button>
 
         <div className={`navbar-links ${menuOpen ? 'open' : ''}`}>
-          <Link to="/leaderboard" className={`nav-link ${isActive('/leaderboard') ? 'active' : ''}`}>
-            <Icon name="trophy" size={17} /> Leaderboard
-          </Link>
           <Link to="/hackathons" className={`nav-link ${location.pathname.startsWith('/hackathons') ? 'active' : ''}`}>
             <Icon name="zap" size={17} /> Hackathons
           </Link>
 
           {user ? (
             <>
-              <Link to="/dashboard" className={`nav-link ${isActive('/dashboard') ? 'active' : ''}`}>
+              <Link to="/dashboard" className={`nav-link ${location.pathname === '/dashboard' ? 'active' : ''}`}>
                 Dashboard
               </Link>
               {user.role === 'participant' && (
                 <Link to="/hackathons" className={`nav-link ${location.pathname.startsWith('/hackathons') ? 'active' : ''}`}>My Hackathons</Link>
               )}
               {user.role === 'judge' && (
-                <Link to="/judge" className={`nav-link ${isActive('/judge') ? 'active' : ''}`}>Judge Panel</Link>
+                <Link to="/judge" className={`nav-link ${location.pathname === '/judge' ? 'active' : ''}`}>Judge Panel</Link>
               )}
               {user.role === 'admin' && (
-                <Link to="/admin" className={`nav-link ${isActive('/admin') ? 'active' : ''}`}>Admin</Link>
+                <Link to="/admin" className={`nav-link ${location.pathname === '/admin' ? 'active' : ''}`}>Admin</Link>
               )}
               <div className="nav-user">
                 <span className="user-name">{user.name}</span>

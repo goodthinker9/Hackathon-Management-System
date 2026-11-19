@@ -33,7 +33,7 @@ const createTeam = async (req, res) => {
   const team = await TeamModel.findById(teamId, req.hackathon.id);
   res.status(201).json({
     message: 'Team created successfully',
-    team: { ...team, members: await TeamModel.getMembers(teamId) },
+    team: { ...team, members: await TeamModel.getMembers(teamId, req.user.id, req.user.role) },
   });
 };
 
@@ -61,7 +61,7 @@ const joinTeam = async (req, res) => {
     const team = await TeamModel.findById(teamId, req.hackathon.id);
     res.json({
       message: 'Joined team successfully',
-      team: { ...team, members: await TeamModel.getMembers(teamId) },
+      team: { ...team, members: await TeamModel.getMembers(teamId, req.user.id, req.user.role) },
     });
   } catch (error) {
     if (error.code === 'ER_DUP_ENTRY') {
@@ -74,7 +74,7 @@ const joinTeam = async (req, res) => {
 const getMyTeam = async (req, res) => {
   const team = await TeamModel.getUserTeam(req.user.id, req.hackathon.id);
   if (!team) return res.json({ team: null });
-  const members = await TeamModel.getMembers(team.id);
+  const members = await TeamModel.getMembers(team.id, req.user.id, req.user.role);
   res.json({ team: { ...team, members } });
 };
 
@@ -85,7 +85,7 @@ const getTeamById = async (req, res) => {
   if (!hackathon || (!hackathon.is_published && req.user.role !== 'admin')) {
     throw new HttpError(404, 'Team not found');
   }
-  const members = await TeamModel.getMembers(team.id);
+  const members = await TeamModel.getMembers(team.id, req.user.id, req.user.role);
   res.json({ team: { ...team, members } });
 };
 

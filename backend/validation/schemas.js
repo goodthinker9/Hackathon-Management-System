@@ -57,6 +57,38 @@ const createUser = z.object({
 const updateProfile = z.object({
   name,
   bio: z.string().max(300, 'Bio must be 300 characters or fewer').optional().or(z.literal('')),
+  skills: z.string().trim().max(255, 'Skills must be 255 characters or fewer').optional().or(z.literal('')).superRefine((value, context) => {
+    if (!value) return;
+    const items = value.split(',').map((item) => item.trim());
+    if (items.length > 10) {
+      context.addIssue({ code: 'custom', message: 'Enter no more than 10 skills' });
+    }
+    items.forEach((item, index) => {
+      if (!item) {
+        context.addIssue({ code: 'custom', path: [index], message: 'Skills must not contain empty items' });
+      } else if (item.length > 30) {
+        context.addIssue({ code: 'custom', path: [index], message: 'Each skill must be 30 characters or fewer' });
+      }
+    });
+  }),
+  github_url: z.string().trim().max(255, 'GitHub profile URL must be 255 characters or fewer').optional().or(z.literal('')).refine((value) => {
+    if (!value) return true;
+    try {
+      const url = new URL(value);
+      const pathParts = url.pathname.split('/').filter(Boolean);
+      return url.protocol === 'https:'
+        && url.hostname === 'github.com'
+        && !url.port
+        && !url.username
+        && !url.password
+        && !url.search
+        && !url.hash
+        && pathParts.length === 1
+        && /^\/[a-z\d](?:[a-z\d-]{0,37}[a-z\d])?\/?$/i.test(url.pathname);
+    } catch {
+      return false;
+    }
+  }, 'Enter an HTTPS GitHub profile URL (https://github.com/username)'),
 });
 
 const updatePassword = z.object({

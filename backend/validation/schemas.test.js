@@ -2,6 +2,7 @@ const test = require('node:test');
 const assert = require('node:assert/strict');
 const {
   register,
+  updateProfile,
   updatePassword,
   createHackathon,
   submitScore,
@@ -45,6 +46,34 @@ test('password update requires a different new password', () => {
     currentPassword: 'old-password',
     newPassword: 'new-password',
   }).success, true);
+});
+
+test('profile skills and GitHub URL are bounded and validated', () => {
+  assert.equal(updateProfile.safeParse({
+    name: 'Participant',
+    skills: 'React, Node.js',
+    github_url: 'https://github.com/octocat',
+  }).success, true);
+  assert.equal(updateProfile.safeParse({
+    name: 'Participant',
+    skills: ['x'.repeat(30), ...Array.from({ length: 9 }, () => 'y')].join(','),
+  }).success, true);
+  assert.equal(updateProfile.safeParse({
+    name: 'Participant',
+    skills: Array.from({ length: 11 }, (_, index) => `Skill${index}`).join(','),
+  }).success, false);
+  assert.equal(updateProfile.safeParse({
+    name: 'Participant',
+    skills: 'x'.repeat(31),
+  }).success, false);
+  assert.equal(updateProfile.safeParse({
+    name: 'Participant',
+    github_url: 'http://github.com/octocat',
+  }).success, false);
+  assert.equal(updateProfile.safeParse({
+    name: 'Participant',
+    github_url: 'https://github.com/octocat/repo',
+  }).success, false);
 });
 
 test('scores must be integers from 1 to 10 with bounded feedback', () => {

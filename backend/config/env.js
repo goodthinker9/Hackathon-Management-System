@@ -23,8 +23,13 @@ if (Number(process.env.DB_PORT) < 1 || Number(process.env.DB_PORT) > 65535) {
 }
 process.env.JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || '1d';
 process.env.CLIENT_URL = process.env.CLIENT_URL || 'http://localhost:5173';
+process.env.RATE_LIMIT_MAX = process.env.RATE_LIMIT_MAX || '300';
+if (!/^[1-9]\d*$/.test(process.env.RATE_LIMIT_MAX) || !Number.isSafeInteger(Number(process.env.RATE_LIMIT_MAX))) {
+  throw new Error('RATE_LIMIT_MAX must be a positive integer.');
+}
 
 module.exports = {
   port: Number(process.env.PORT),
   clientOrigins: process.env.CLIENT_URL.split(',').map((url) => url.trim()).filter(Boolean),
+  rateLimitMax: Number(process.env.RATE_LIMIT_MAX),
 };

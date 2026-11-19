@@ -11,8 +11,8 @@ const getProfile = async (req, res) => {
 };
 
 const updateProfile = async (req, res) => {
-  const { name, bio } = req.body;
-  await UserModel.updateProfile(req.user.id, { name, bio });
+  const { name, bio, skills, github_url } = req.body;
+  await UserModel.updateProfile(req.user.id, { name, bio, skills, github_url });
   const user = await UserModel.findById(req.user.id);
   res.json({ message: 'Profile updated successfully', user });
 };

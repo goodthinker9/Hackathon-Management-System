@@ -9,7 +9,12 @@ import './ProfilePage.css';
 export default function ProfilePage() {
   const { user, updateUser } = useAuth();
 
-  const [profileForm, setProfileForm] = useState({ name: user.name, bio: user.bio || '' });
+  const [profileForm, setProfileForm] = useState({
+    name: user.name,
+    bio: user.bio || '',
+    skills: user.skills || '',
+    github_url: user.github_url || '',
+  });
   const [passwordForm, setPasswordForm] = useState({ currentPassword: '', newPassword: '', confirm: '' });
 
   const [profileMsg, setProfileMsg] = useState({ type: '', text: '' });
@@ -226,6 +231,29 @@ export default function ProfilePage() {
                   <small style={{ color: 'var(--text-muted)', fontSize: 12 }}>
                     {profileForm.bio.length}/300 characters
                   </small>
+                </div>
+                <div className="form-group">
+                  <label>Skills</label>
+                  <input
+                    type="text"
+                    value={profileForm.skills}
+                    onChange={(e) => setProfileForm({ ...profileForm, skills: e.target.value })}
+                    placeholder="React, Node.js, MySQL"
+                    maxLength={255}
+                  />
+                  <small style={{ color: 'var(--text-muted)', fontSize: 12 }}>
+                    Comma-separated, up to 10 skills (30 characters each)
+                  </small>
+                </div>
+                <div className="form-group">
+                  <label>GitHub Profile URL</label>
+                  <input
+                    type="url"
+                    value={profileForm.github_url}
+                    onChange={(e) => setProfileForm({ ...profileForm, github_url: e.target.value })}
+                    placeholder="https://github.com/username"
+                    maxLength={255}
+                  />
                 </div>
                 <button type="submit" className="btn btn-primary" disabled={savingProfile}>
                   {savingProfile ? <><Icon name="hourglass" size={17} /> Saving...</> : <><Icon name="save" size={17} /> Save Changes</>}

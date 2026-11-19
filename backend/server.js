@@ -4,7 +4,7 @@ const helmet = require('helmet');
 const morgan = require('morgan');
 const rateLimit = require('express-rate-limit');
 const path = require('path');
-const { port, clientOrigins } = require('./config/env');
+const { port, clientOrigins, rateLimitMax } = require('./config/env');
 const db = require('./config/db');
 const { HttpError, notFoundHandler, errorHandler } = require('./middleware/errorHandler');
 
@@ -12,7 +12,7 @@ const app = express();
 app.set('trust proxy', process.env.TRUST_PROXY || false);
 const generalLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  limit: 100,
+  limit: rateLimitMax,
   standardHeaders: true,
   legacyHeaders: false,
   handler: (_req, res) => res.status(429).json({ message: 'Too many requests', errors: [] }),
@@ -41,7 +41,6 @@ app.use('/api/profile', require('./routes/profileRoutes'));
 app.use('/api/teams', require('./routes/teamRoutes'));
 app.use('/api/projects', require('./routes/projectRoutes'));
 app.use('/api/scores', require('./routes/scoreRoutes'));
-app.use('/api/leaderboard', require('./routes/leaderboardRoutes'));
 app.use('/api/admin', require('./routes/adminRoutes'));
 
 // Health check
